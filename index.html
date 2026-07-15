@@ -235,11 +235,62 @@
         .color-btn { width: 30px; height: 30px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.4); transition: transform 0.1s; }
         .color-btn:active, .color-btn.selected { transform: scale(1.15); border-color: #333; }
 
+        /* --- ADDED: Fairy Lights --- */
+        .fairy-lights { position: absolute; top: 0; left: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; padding: 0; margin: 0; list-style: none; z-index: 0; pointer-events: none; }
+        .fairy-lights li { position: relative; width: 12px; height: 20px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #fff; animation: glow 2s infinite alternate; }
+        .fairy-lights li::before { content: ''; position: absolute; top: -5px; left: 4px; width: 4px; height: 5px; background: #333; border-radius: 2px; }
+        .fairy-lights li:nth-child(odd) { animation-duration: 1.5s; background: var(--sm-yellow); box-shadow: 0 0 15px 5px var(--sm-yellow); }
+        .fairy-lights li:nth-child(even) { animation-duration: 2.2s; background: #ffb6c1; box-shadow: 0 0 15px 5px #ffb6c1; }
+        .fairy-lights li:nth-child(3n) { animation-duration: 1.8s; background: #87ceeb; box-shadow: 0 0 15px 5px #87ceeb; }
+        @keyframes glow { 0% { opacity: 0.5; filter: brightness(1); } 100% { opacity: 1; filter: brightness(1.5); } }
+
+        /* --- ADDED: Pink Matrix --- */
+        #matrix-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; opacity: 0.35; pointer-events: none; }
+
+        /* --- UPDATED: Cute Vinyl Record Player --- */
+        .record-player-3d {
+            background: #ffecf2; /* Soft pastel pink wood box */
+            border-radius: 15px; padding: 20px;
+            box-shadow: 10px 10px 25px rgba(0,0,0,0.5), inset -2px -2px 10px rgba(0,0,0,0.1), inset 2px 2px 10px #fff;
+            border: 4px solid #ff69b4;
+            position: relative;
+        }
+        .platter-3d {
+            width: 220px; height: 220px; background: #eee; border-radius: 50%;
+            margin: 0 auto 20px auto; position: relative;
+            box-shadow: inset 2px 2px 10px rgba(0,0,0,0.2), 5px 5px 15px rgba(0,0,0,0.4);
+            border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;
+        }
+        /* New Tonearm CSS */
+        .tonearm {
+            position: absolute; top: 10px; right: 10px; width: 30px; height: 120px;
+            transform-origin: top center; transform: rotate(-20deg); transition: transform 0.5s ease; z-index: 5; pointer-events: none;
+        }
+        .tonearm-base { width: 40px; height: 40px; background: #ccc; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.4); border: 2px solid #aaa; position: absolute; top: -10px; left: -5px; }
+        .tonearm-rod { width: 8px; height: 110px; background: linear-gradient(to right, #ddd, #fff, #aaa); position: absolute; top: 20px; left: 11px; border-radius: 4px; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
+        .tonearm-head { width: 18px; height: 30px; background: #555; position: absolute; bottom: -10px; left: 6px; border-radius: 4px; box-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
+        .active-record.spin + .tonearm { transform: rotate(15deg); }
+
+        /* --- ADDED: Procreate UI Tools --- */
+        .procreate-toolbar { background: rgba(255,255,255,0.8); border-radius: 10px; padding: 10px; margin-bottom: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+        .tool-slider { display: flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: bold; }
+        .tool-slider input[type=range] { width: 70px; accent-color: var(--sm-hotpink); }
+        .brush-btn { padding: 4px 8px; border-radius: 6px; border: 2px solid #ccc; font-size: 0.8rem; font-weight: bold; background: white; transition: 0.2s; }
+        .brush-btn.active { border-color: var(--sm-hotpink); background: #ffe4e1; color: var(--sm-hotpink); }
+
         @keyframes bounceLuna { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes sleepPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
 <body class="py-10 px-4 md:px-8 relative">
+
+    <!-- Magical Matrix Canvas -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Fairy Lights -->
+    <ul class="fairy-lights">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
 
     <!-- Cosmic Background Stars Container -->
     <div class="stars-container" id="stars-container"></div>
@@ -283,6 +334,12 @@
                 <div class="platter-3d mx-auto" id="turntable">
                     <div class="active-record" id="active-record">
                         <div class="record-label" id="record-label">🌙</div>
+                    </div>
+                    <!-- Cute Tonearm -->
+                    <div class="tonearm">
+                        <div class="tonearm-base"></div>
+                        <div class="tonearm-rod"></div>
+                        <div class="tonearm-head"></div>
                     </div>
                 </div>
 
@@ -371,18 +428,36 @@
             <div class="sketchpad-container w-full max-w-[500px] mx-auto text-gray-800">
                 <h2 class="font-['Fredoka_One'] text-2xl text-purple-600 mb-2 text-center drop-shadow-sm">Cosmic Canvas 🎨</h2>
                 
+                <!-- Procreate-like Toolbar -->
+                <div class="procreate-toolbar">
+                    <div class="flex gap-2 items-center">
+                        <input type="color" id="brush-color" value="#ff69b4" class="w-8 h-8 rounded cursor-pointer border-0 p-0" title="Custom Color">
+                        <div class="flex gap-1">
+                            <button class="color-btn selected" style="background: #ff69b4;" onclick="quickColor('#ff69b4')"></button>
+                            <button class="color-btn" style="background: #87ceeb;" onclick="quickColor('#87ceeb')"></button>
+                            <button class="color-btn" style="background: #ffd700;" onclick="quickColor('#ffd700')"></button>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="brush-btn active" id="btn-normal" onclick="setBrush('normal')">Pencil</button>
+                        <button class="brush-btn" id="btn-neon" onclick="setBrush('neon')">Neon</button>
+                        <button class="brush-btn" id="btn-erase" onclick="setBrush('erase')">Eraser</button>
+                    </div>
+                    <div class="flex gap-4 w-full justify-center mt-2 lg:mt-0">
+                        <div class="tool-slider">
+                            Size: <input type="range" id="brush-size" min="1" max="50" value="5">
+                        </div>
+                        <div class="tool-slider">
+                            Opacity: <input type="range" id="brush-opacity" min="0.1" max="1" step="0.1" value="1">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Drawing Canvas -->
                 <canvas id="art-canvas" class="w-full h-64 bg-white border-2 border-purple-300 rounded cursor-crosshair touch-none shadow-inner"></canvas>
                 
-                <!-- Tools -->
                 <div class="flex justify-between items-center mt-4">
-                    <div class="flex gap-2">
-                        <button class="color-btn selected" style="background: #ff69b4;" onclick="changeColor(this, '#ff69b4')"></button>
-                        <button class="color-btn" style="background: #87ceeb;" onclick="changeColor(this, '#87ceeb')"></button>
-                        <button class="color-btn" style="background: #ffd700;" onclick="changeColor(this, '#ffd700')"></button>
-                        <button class="color-btn" style="background: #9370db;" onclick="changeColor(this, '#9370db')"></button>
-                        <button class="color-btn" style="background: #ffffff; border-color: #ddd;" onclick="changeColor(this, '#ffffff')" title="Eraser">🤍</button>
-                    </div>
+                    <button onclick="undoStroke()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 font-bold rounded-lg text-sm shadow-sm transition">↩ Undo</button>
                     <button onclick="clearCanvas()" class="px-4 py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 border border-purple-300 font-bold rounded-lg text-sm shadow-sm transition">Clear Page</button>
                 </div>
             </div>
@@ -392,6 +467,41 @@
     </div>
 
     <script>
+        // --- ADDED: PINK MATRIX EFFECT ---
+        const mCanvas = document.getElementById('matrix-canvas');
+        const mCtx = mCanvas.getContext('2d');
+        let mWidth, mHeight, mColumns, mDrops;
+        
+        function initMatrix() {
+            mWidth = mCanvas.width = window.innerWidth;
+            mHeight = mCanvas.height = window.innerHeight;
+            mColumns = Math.floor(mWidth / 20);
+            mDrops = [];
+            for (let i = 0; i < mColumns; i++) mDrops[i] = Math.random() * -100; // Staggered start
+        }
+        initMatrix();
+        window.addEventListener('resize', initMatrix);
+
+        const mChars = '☽★✧✦✨01♡🌸🎀';
+        function drawMatrix() {
+            mCtx.fillStyle = 'rgba(15, 12, 41, 0.1)'; // Matches cosmic-dark
+            mCtx.fillRect(0, 0, mWidth, mHeight);
+            
+            mCtx.fillStyle = '#ffb6c1'; // Sailor Moon Pink
+            mCtx.font = '15px monospace';
+            
+            for (let i = 0; i < mDrops.length; i++) {
+                const text = mChars.charAt(Math.floor(Math.random() * mChars.length));
+                mCtx.fillText(text, i * 20, mDrops[i] * 20);
+                
+                if (mDrops[i] * 20 > mHeight && Math.random() > 0.975) {
+                    mDrops[i] = 0;
+                }
+                mDrops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+
         // --- 0. BACKGROUND STARS GENERATION ---
         const starContainer = document.getElementById('stars-container');
         for(let i=0; i<70; i++) {
@@ -618,20 +728,53 @@
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
         let currentColor = '#ff69b4';
+        let brushType = 'normal'; // normal, neon, erase
+        let strokes = []; // For Undo
+        let currentStroke = [];
+
+        const colorInput = document.getElementById('brush-color');
+        const sizeInput = document.getElementById('brush-size');
+        const opacityInput = document.getElementById('brush-opacity');
+
+        // Link color picker to current color
+        colorInput.addEventListener('input', (e) => {
+            currentColor = e.target.value;
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+            if(brushType === 'erase') setBrush('normal');
+        });
+
+        function quickColor(color) {
+            currentColor = color;
+            colorInput.value = color; // Sync native picker
+            document.querySelectorAll('.color-btn').forEach(b => {
+                b.classList.toggle('selected', b.style.backgroundColor === color);
+            });
+            if(brushType === 'erase') setBrush('normal');
+        }
+
+        function setBrush(type) {
+            brushType = type;
+            document.querySelectorAll('.brush-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${type}`).classList.add('active');
+        }
         
         function resizeCanvas() {
             const rect = canvas.getBoundingClientRect();
+            // Save state before resize to prevent clearing
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            tempCanvas.getContext('2d').drawImage(canvas, 0, 0);
+            
             canvas.width = rect.width;
             canvas.height = rect.height;
+            
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(tempCanvas, 0, 0);
         }
         window.addEventListener('resize', resizeCanvas);
         setTimeout(resizeCanvas, 100);
-
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.lineWidth = 5;
 
         function getPos(e) {
             const rect = canvas.getBoundingClientRect();
@@ -645,20 +788,105 @@
             e.preventDefault();
             isDrawing = true;
             const pos = getPos(e);
+            currentStroke = [{...pos, color: currentColor, size: sizeInput.value, opacity: opacityInput.value, type: brushType}];
             ctx.beginPath();
             ctx.moveTo(pos.x, pos.y);
+            applyBrushSettings();
+        }
+
+        function applyBrushSettings() {
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = sizeInput.value;
+            ctx.globalAlpha = opacityInput.value;
+            
+            if (brushType === 'erase') {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = "rgba(0,0,0,1)";
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = currentColor;
+                if (brushType === 'neon') {
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = currentColor;
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+            }
         }
 
         function draw(e) {
             e.preventDefault();
             if (!isDrawing) return;
             const pos = getPos(e);
-            ctx.strokeStyle = currentColor;
+            currentStroke.push({...pos});
             ctx.lineTo(pos.x, pos.y);
             ctx.stroke();
         }
 
-        function stopDraw() { isDrawing = false; }
+        function stopDraw() { 
+            if(isDrawing) {
+                strokes.push(currentStroke);
+                isDrawing = false; 
+                // Reset styles to avoid affecting other operations
+                ctx.shadowBlur = 0; 
+                ctx.globalAlpha = 1;
+                ctx.globalCompositeOperation = 'source-over';
+            }
+        }
+
+        function redrawAll() {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalAlpha = 1;
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            strokes.forEach(stroke => {
+                if(stroke.length === 0) return;
+                
+                ctx.beginPath();
+                ctx.moveTo(stroke[0].x, stroke[0].y);
+                
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.lineWidth = stroke[0].size;
+                ctx.globalAlpha = stroke[0].opacity;
+                
+                if (stroke[0].type === 'erase') {
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.shadowBlur = 0;
+                    ctx.strokeStyle = "rgba(0,0,0,1)";
+                } else {
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.strokeStyle = stroke[0].color;
+                    if (stroke[0].type === 'neon') {
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = stroke[0].color;
+                    } else {
+                        ctx.shadowBlur = 0;
+                    }
+                }
+                
+                for(let i=1; i<stroke.length; i++) {
+                    ctx.lineTo(stroke[i].x, stroke[i].y);
+                }
+                ctx.stroke();
+            });
+        }
+
+        function undoStroke() {
+            if(strokes.length > 0) {
+                strokes.pop();
+                redrawAll();
+            }
+        }
+
+        function clearCanvas() {
+            strokes = [];
+            redrawAll();
+        }
 
         canvas.addEventListener('mousedown', startDraw);
         canvas.addEventListener('mousemove', draw);
@@ -667,18 +895,6 @@
         canvas.addEventListener('touchstart', startDraw, {passive: false});
         canvas.addEventListener('touchmove', draw, {passive: false});
         canvas.addEventListener('touchend', stopDraw);
-
-        function changeColor(btn, color) {
-            currentColor = color;
-            ctx.lineWidth = color === '#ffffff' ? 15 : 5;
-            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-        }
-
-        function clearCanvas() {
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
 
     </script>
 </body>
