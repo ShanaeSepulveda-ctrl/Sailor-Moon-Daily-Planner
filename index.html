@@ -3,130 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Magical Y2K Room</title>
+    <title>🌙 My Magical Y2K Sanctuary</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=VT323&display=swap" rel="stylesheet">
     <style>
-        :root { --y2k-pink: #ff99cc; --y2k-blue: #a0c4ff; --y2k-purple: #c499ff; }
-        body { background: radial-gradient(circle at center, #2b1055, #111); min-height: 100vh; color: #fff; font-family: 'VT323', monospace; cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z" fill="%23FFD700" stroke="%23FFF" stroke-width="1"/></svg>'), auto; overflow-x: hidden; }
-        
-        /* 3D Boombox Styles */
-        .boombox { transform-style: preserve-3d; background: #333; padding: 20px; border-radius: 20px; border: 8px solid #555; box-shadow: 10px 10px 0 #000; }
-        .cassette { width: 100px; height: 60px; background: #ddd; border-radius: 5px; cursor: pointer; transition: transform 0.2s; }
-        .cassette:hover { transform: translateY(-5px); }
-        
-        /* Tamagotchi Shell */
-        .tama-shell { background: var(--y2k-pink); border-radius: 30px; border: 6px solid #ff6699; box-shadow: 0 10px 20px rgba(0,0,0,0.5); padding: 20px; }
-        
-        /* Gameboy */
-        .gameboy { background: #999; width: 160px; height: 250px; border-radius: 10px 10px 50px 10px; border: 4px solid #333; padding: 15px; }
-        
-        /* Planner */
-        .pda-frame { background: #111; border: 8px solid #333; border-radius: 20px; padding: 15px; box-shadow: 5px 5px 15px rgba(0,0,0,0.5); height: 500px; }
-        
-        .sparkle { animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        body { background: linear-gradient(135deg, #2b1055, #752273, #ffb6c1); min-height: 100vh; overflow-x: hidden; font-family: 'VT323', monospace; }
+        .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .pda-bezel { background: #1a1a1a; border: 12px solid #333; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .boombox-3d { background: #444; border-radius: 20px; border: 6px solid #666; box-shadow: 10px 10px 0 #222; }
+        .gem-belly { animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { filter: hue-rotate(0deg) brightness(1); } 50% { filter: hue-rotate(90deg) brightness(1.5); } }
+        .fairy-dust { position: fixed; width: 4px; height: 4px; background: white; border-radius: 50%; pointer-events: none; }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-6 md:p-12 text-white">
 
-    <div class="flex flex-wrap justify-center gap-10">
+    <!-- MAGICAL ROOM LAYOUT -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <!-- Left Side: Room Decor & Tech -->
-        <div class="flex flex-col gap-6 w-full lg:w-80">
-            
-            <!-- Shelf Decor -->
-            <div class="bg-purple-900/30 p-4 rounded-xl border border-purple-500 flex justify-around">
-                <div title="Furby" class="text-4xl">🌈✨</div>
-                <div title="Troll Doll" class="text-4xl">💎</div>
-                <div title="Beanie Baby" class="text-4xl">🧸</div>
+        <!-- COLUMN 1: TECH & SHELF -->
+        <div class="space-y-8">
+            <!-- 3D Boombox -->
+            <div class="boombox-3d p-6">
+                <h2 class="text-2xl text-center mb-4 text-pink-300">MOON BEATS</h2>
+                <div class="flex justify-center gap-4 mb-6">
+                    <button onclick="playMusic(0)" class="w-16 h-10 bg-blue-500 rounded-sm border-2 border-white shadow-inner"></button>
+                    <button onclick="playMusic(1)" class="w-16 h-10 bg-pink-500 rounded-sm border-2 border-white shadow-inner"></button>
+                    <button onclick="playMusic(2)" class="w-16 h-10 bg-yellow-500 rounded-sm border-2 border-white shadow-inner"></button>
+                </div>
+                <iframe id="spotify-player" style="border-radius:12px" src="https://open.spotify.com/embed/album/2IevUWpkZ9KUcr6ZhtklE0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay"></iframe>
             </div>
 
-            <!-- Boombox -->
-            <div class="boombox">
-                <h2 class="text-center text-sm mb-2 font-[Press_Start_2P]">BOOMBOX</h2>
-                <div class="flex gap-2 justify-center mb-4">
-                    <div class="cassette bg-blue-500" onclick="playMusic(0)"></div>
-                    <div class="cassette bg-pink-500" onclick="playMusic(1)"></div>
-                    <div class="cassette bg-yellow-500" onclick="playMusic(2)"></div>
-                </div>
-                <iframe id="spotify-player" style="border-radius:12px" src="https://open.spotify.com/embed/album/2IevUWpkZ9KUcr6ZhtklE0" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-
-            <!-- Luna-Gotchi -->
-            <div class="tama-shell">
-                <div id="tama-screen" class="bg-green-300 w-full h-32 rounded-lg border-4 border-black p-2 font-[Press_Start_2P] text-black text-[10px]">
-                    LUNA: <span id="luna-msg">Meow!</span><br>
-                    <div id="stats" class="mt-2">HP: ♥♥♥ | JOY: ☺☺</div>
-                </div>
-                <div class="flex justify-between mt-4">
-                    <button onclick="feedLuna()" class="bg-black text-white p-2 rounded-full w-12 h-12 text-lg">🍖</button>
-                    <button onclick="playLuna()" class="bg-black text-white p-2 rounded-full w-12 h-12 text-lg">🧶</button>
-                </div>
+            <!-- Shelf -->
+            <div class="glass p-6 rounded-2xl flex justify-around items-end">
+                <div class="text-4xl hover:scale-110 transition">🌈🧸</div>
+                <div class="text-4xl gem-belly hover:scale-110 transition">💎👹</div>
             </div>
 
             <!-- Gameboy -->
-            <div class="gameboy mx-auto">
-                <canvas id="game-canvas" width="120" height="120" class="bg-green-700 w-full h-32 mb-4"></canvas>
-                <div class="flex justify-center gap-4">
-                    <button onclick="startGame()" class="bg-red-600 w-10 h-10 rounded-full shadow-lg border-b-4 border-red-900"></button>
-                    <button onclick="resetGame()" class="bg-blue-600 w-10 h-10 rounded-full shadow-lg border-b-4 border-blue-900"></button>
+            <div class="bg-gray-700 p-4 rounded-xl border-b-8 border-gray-900 inline-block">
+                <canvas id="game-screen" width="120" height="100" class="bg-green-200 border-4 border-black"></canvas>
+                <div class="mt-4 flex gap-2">
+                    <button onclick="alert('Snake Start!')" class="w-8 h-8 rounded-full bg-red-600"></button>
+                    <button onclick="alert('Reset!')" class="w-8 h-8 rounded-full bg-blue-600"></button>
                 </div>
             </div>
         </div>
 
-        <!-- Right Side: PDA Planner -->
-        <div class="pda-frame w-full lg:w-96">
-            <h1 class="text-pink-300 font-[Press_Start_2P] text-xs text-center mb-4">MOON PLANNER v1.0</h1>
-            <textarea id="daily-brief" class="w-full h-40 bg-black text-green-400 font-[VT323] p-2 border border-green-900 text-sm" placeholder="Paste your daily brief here..."></textarea>
-            <button onclick="saveBrief()" class="w-full bg-pink-600 hover:bg-pink-500 text-white p-2 mt-2 rounded">SYNC TO DEVICE</button>
-            
-            <div id="tasks" class="mt-6 space-y-2 overflow-y-auto max-h-60">
-                <!-- Planner Tasks -->
+        <!-- COLUMN 2 & 3: PDA PLANNER & TAMAGOTCHI -->
+        <div class="lg:col-span-2 space-y-8">
+            <!-- PDA Planner -->
+            <div class="pda-bezel p-8">
+                <h1 class="text-2xl text-pink-300 mb-4 text-center">Usagi's Daily Missions</h1>
+                <textarea id="daily-sync" class="w-full h-64 bg-black text-green-400 p-4 font-mono rounded-lg border border-green-900" placeholder="Sync your daily brief here..."></textarea>
+                <button onclick="syncData()" class="w-full mt-4 bg-pink-500 hover:bg-pink-400 p-3 rounded-full font-bold">SYNC SYNC SYNC! ✨</button>
+            </div>
+
+            <!-- 3D Luna-Gotchi -->
+            <div class="tama-shell w-64 mx-auto text-center">
+                <div class="bg-black p-4 rounded-xl mb-4">
+                    <div id="luna-screen" class="bg-green-200 h-24 rounded border-4 border-gray-600 flex items-center justify-center text-black text-4xl">🐱</div>
+                </div>
+                <div class="flex justify-center gap-4">
+                    <button onclick="feedLuna()" class="bg-white text-black p-3 rounded-full">🍖</button>
+                    <button onclick="playLuna()" class="bg-white text-black p-3 rounded-full">🧶</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Music Player
+        // Persistence
+        function syncData() {
+            localStorage.setItem('magical-brief', document.getElementById('daily-sync').value);
+            alert("✨ Sync Complete! ✨");
+        }
+        window.onload = () => document.getElementById('daily-sync').value = localStorage.getItem('magical-brief') || "";
+
+        // Music
         function playMusic(index) {
-            const player = document.getElementById('spotify-player');
             const urls = [
                 "https://open.spotify.com/embed/album/2IevUWpkZ9KUcr6ZhtklE0",
                 "https://open.spotify.com/embed/playlist/5QiMvqbV1bZschvqV3tPs0",
                 "https://open.spotify.com/embed/album/3hzUq786dmch2KTVixU9Tb"
             ];
-            player.src = urls[index];
+            document.getElementById('spotify-player').src = urls[index];
         }
 
-        // Planner Sync
-        function saveBrief() {
-            const text = document.getElementById('daily-brief').value;
-            localStorage.setItem('magical-brief', text);
-            alert('Synced to your PDA!');
-        }
+        // Luna
+        function feedLuna() { alert("Luna ate! 🍖"); }
+        function playLuna() { alert("Luna is happy! 🧶"); }
 
-        window.onload = () => {
-            document.getElementById('daily-brief').value = localStorage.getItem('magical-brief') || "";
-        }
-
-        // Luna Game Logic
-        let luna = { joy: 5, hunger: 5 };
-        function feedLuna() { luna.hunger = Math.min(luna.hunger + 2, 5); updateTama(); }
-        function playLuna() { luna.joy = Math.min(luna.joy + 2, 5); updateTama(); }
-        function updateTama() {
-            document.getElementById('stats').innerText = `HP: ${'♥'.repeat(luna.hunger)} | JOY: ${'☺'.repeat(luna.joy)}`;
-            document.getElementById('luna-msg').innerText = luna.hunger < 2 ? "Feed me!" : "Purrr...";
-        }
-
-        // Mini Game Logic (Snake)
-        let canvas = document.getElementById('game-canvas');
-        let ctx = canvas.getContext('2d');
-        function startGame() {
-            ctx.fillStyle = "black";
-            ctx.fillRect(50, 50, 20, 20); // Placeholder
-        }
-        function resetGame() { ctx.clearRect(0,0,120,120); }
+        // Fairy Dust
+        document.addEventListener('mousemove', e => {
+            const dust = document.createElement('div');
+            dust.className = 'fairy-dust';
+            dust.style.left = e.pageX + 'px';
+            dust.style.top = e.pageY + 'px';
+            document.body.appendChild(dust);
+            setTimeout(() => dust.remove(), 1000);
+        });
     </script>
+    <style>.fairy-dust { position: absolute; background: gold; width: 4px; height: 4px; border-radius: 50%; pointer-events: none; }</style>
 </body>
 </html>
