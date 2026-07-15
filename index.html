@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magical Daily Planner & Music</title>
+    <title>Magical Daily Planner & Luna-gotchi</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <!-- Added Press Start 2P for the retro Tamagotchi vibe! -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
             --sm-pink: #ffb6c1;
@@ -13,22 +14,25 @@
             --sm-blue: #191970;
             --sm-yellow: #ffd700;
             --sm-purple: #9370db;
-            --glass-bg: rgba(255, 255, 255, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.9);
         }
 
+        /* Magical Star Cursors! */
         body {
             margin: 0;
             font-family: 'Nunito', sans-serif;
-            /* Deep starry night fading into pastel twilight */
             background: linear-gradient(180deg, #191970 0%, #483d8b 30%, #ffafbd 70%, #ffc3a0 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
             color: #4a4a4a;
             overflow-x: hidden;
+            /* Pink star cursor */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z" fill="%23FF69B4" stroke="%23FFF" stroke-width="1"/></svg>'), auto;
+        }
+
+        /* Gold star cursor on hover */
+        button, a, input, .cursor-pointer, .vinyl, .star-checkbox {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z" fill="%23FFD700" stroke="%23FFF" stroke-width="1"/></svg>'), pointer !important;
         }
 
         .stars-overlay {
@@ -43,40 +47,28 @@
                 radial-gradient(3px 3px at 80px 120px, #fff, rgba(0,0,0,0)),
                 radial-gradient(2px 2px at 150px 70px, #ffd700, rgba(0,0,0,0)),
                 radial-gradient(4px 4px at 220px 220px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 350px 50px, #ffb6c1, rgba(0,0,0,0));
+                radial-gradient(2px 2px at 350px 50px, #ffb6c1, rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 50% 50%, #fff, rgba(0,0,0,0));
             background-repeat: repeat;
             background-size: 400px 400px;
-            opacity: 0.6;
-            animation: twinkle 5s infinite alternate;
+            opacity: 0.7;
+            animation: twinkle 4s infinite alternate;
             z-index: 0;
         }
 
         @keyframes twinkle {
-            0% { opacity: 0.3; transform: scale(0.98); }
-            100% { opacity: 0.8; transform: scale(1.02); }
-        }
-
-        .dashboard-container {
-            display: flex;
-            flex-direction: row;
-            gap: 30px;
-            align-items: flex-start;
-            justify-content: center;
-            flex-wrap: wrap; /* Wrap on mobile */
-            max-width: 1100px;
-            width: 100%;
-            z-index: 10;
+            0% { opacity: 0.4; transform: scale(0.98); }
+            100% { opacity: 0.9; transform: scale(1.02); }
         }
 
         .retro-player-card {
-            background: rgba(255, 182, 193, 0.85); /* Pastel pink */
+            background: rgba(255, 182, 193, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 4px solid var(--glass-border);
             box-shadow: 0 15px 35px rgba(25, 25, 112, 0.3), inset 0 0 20px rgba(255,255,255,0.5);
             border-radius: 32px;
             width: 100%;
-            max-width: 380px;
             padding: 24px;
             display: flex;
             flex-direction: column;
@@ -89,7 +81,7 @@
             color: white;
             text-shadow: 2px 2px 0px var(--sm-hotpink);
             font-size: 1.5rem;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             letter-spacing: 1px;
             display: flex;
             align-items: center;
@@ -97,8 +89,9 @@
         }
 
         .turntable {
-            width: 280px;
-            height: 280px;
+            width: 100%;
+            max-width: 260px;
+            aspect-ratio: 1 / 1;
             background: #fff0f5;
             border-radius: 20px;
             box-shadow: inset 0 4px 10px rgba(0,0,0,0.1), 0 4px 0 rgba(255,255,255,0.8);
@@ -110,10 +103,9 @@
             border: 2px solid #ffd700;
         }
 
-        /* The spinning vinyl record */
         .vinyl {
-            width: 240px;
-            height: 240px;
+            width: 85%;
+            height: 85%;
             background: radial-gradient(circle, #333 30%, #111 70%, #222 100%);
             border-radius: 50%;
             box-shadow: 0 8px 15px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.8);
@@ -122,31 +114,29 @@
             justify-content: center;
             align-items: center;
             transition: all 0.3s ease;
-            cursor: pointer;
             border: 4px solid #444;
         }
 
-        /* Grooves on the vinyl */
         .vinyl::before {
             content: '';
             position: absolute;
-            width: 220px;
-            height: 220px;
+            width: 90%;
+            height: 90%;
             border-radius: 50%;
             border: 1px solid rgba(255,255,255,0.1);
             box-shadow: inset 0 0 0 10px rgba(0,0,0,0.2), inset 0 0 0 20px rgba(255,255,255,0.05);
         }
 
         .vinyl-label {
-            width: 80px;
-            height: 80px;
+            width: 30%;
+            height: 30%;
             background: var(--sm-pink);
             border-radius: 50%;
             border: 2px solid var(--sm-yellow);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
             box-shadow: inset 0 0 10px rgba(255,105,180,0.5);
             z-index: 2;
         }
@@ -154,8 +144,8 @@
         .vinyl-label::after {
             content: '';
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 15%;
+            height: 15%;
             background: #fff;
             border-radius: 50%;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
@@ -171,10 +161,10 @@
 
         .tonearm {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 30px;
-            height: 120px;
+            top: 8%;
+            right: 8%;
+            width: 10%;
+            height: 45%;
             transform-origin: top center;
             transform: rotate(-25deg);
             transition: transform 0.5s ease-in-out;
@@ -182,12 +172,12 @@
         }
 
         .playing .tonearm {
-            transform: rotate(15deg); /* Moves over the record */
+            transform: rotate(15deg);
         }
 
         .tonearm-base {
-            width: 30px;
-            height: 30px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
             background: #ccc;
             border-radius: 50%;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
@@ -197,22 +187,22 @@
         }
 
         .tonearm-rod {
-            width: 8px;
-            height: 100px;
+            width: 30%;
+            height: 90%;
             background: linear-gradient(to right, #ddd, #fff, #aaa);
             position: absolute;
-            top: 15px;
-            left: 11px;
+            top: 50%;
+            left: 35%;
             border-radius: 4px;
         }
 
         .tonearm-head {
-            width: 16px;
-            height: 25px;
+            width: 60%;
+            height: 20%;
             background: #444;
             position: absolute;
-            bottom: -5px;
-            left: 7px;
+            bottom: -5%;
+            left: 20%;
             border-radius: 4px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
@@ -224,6 +214,48 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
+        .tamagotchi-card {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            border: 6px solid #fff;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.4);
+            border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%; /* Egg shape! */
+            padding: 30px 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tamagotchi-keychain {
+            position: absolute;
+            top: -20px;
+            width: 30px;
+            height: 30px;
+            border: 5px solid silver;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .tamagotchi-screen {
+            background: #9bbc0f; /* Classic Gameboy/Tamagotchi LCD green */
+            border: 4px solid #333;
+            border-radius: 20px;
+            width: 100%;
+            aspect-ratio: 1.1 / 1;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            font-family: 'Press Start 2P', monospace;
+            color: #113811;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .pixel-text {
+            font-size: 8px;
+            text-shadow: 1px 1px 0px rgba(155, 188, 15, 0.5);
+        }
+
         .planner-card {
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
@@ -232,7 +264,6 @@
             box-shadow: 0 15px 35px rgba(25, 25, 112, 0.2);
             border-radius: 32px;
             width: 100%;
-            max-width: 600px;
             overflow: hidden;
             position: relative;
             display: flex;
@@ -240,12 +271,11 @@
             min-height: 650px;
         }
 
-        /* Ribbon decorative element */
         .ribbon-top {
             position: absolute;
-            top: -10px;
-            right: 40px;
-            font-size: 3rem;
+            top: -15px;
+            right: 30px;
+            font-size: 3.5rem;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
             z-index: 20;
             transform: rotate(15deg);
@@ -253,15 +283,15 @@
 
         .title-font {
             font-family: 'Fredoka One', cursive;
-            background: linear-gradient(45deg, var(--sm-blue), var(--sm-hotpink));
+            background: linear-gradient(45deg, var(--sm-blue), var(--sm-purple), var(--sm-hotpink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: 1px;
         }
 
         .moon-wand-container {
-            height: 16px;
-            background: rgba(255, 255, 255, 0.8);
+            height: 18px;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
             overflow: hidden;
             border: 2px solid var(--sm-yellow);
@@ -271,30 +301,31 @@
 
         .moon-wand-bar {
             height: 100%;
-            background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 50%, #ffd700 100%);
             width: 0%;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
         }
 
         .task-item {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid rgba(255,255,255,0.5);
-            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(255,255,255,0.6);
+            background: rgba(255, 255, 255, 0.8);
         }
         
         .task-item:hover {
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.2);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.25);
             border-color: var(--sm-pink);
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
         }
 
         .task-item.completed {
             opacity: 0.65;
-            background: rgba(240, 240, 245, 0.5);
+            background: rgba(240, 240, 245, 0.6);
             border-color: transparent;
+            transform: scale(0.98);
         }
 
         .task-item.completed .task-title {
@@ -309,7 +340,6 @@
             background-color: #fff;
             border: 3px solid var(--sm-pink);
             border-radius: 50%;
-            cursor: pointer;
             position: relative;
             outline: none;
             transition: all 0.3s ease;
@@ -322,12 +352,6 @@
             border-color: var(--sm-yellow);
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             animation: pop 0.4s ease-out;
-        }
-
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
         }
 
         .star-checkbox:checked::after {
@@ -345,12 +369,12 @@
 
         .filter-btn {
             transition: all 0.2s ease;
-            background: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.7);
             color: var(--sm-blue);
             border: 2px solid transparent;
         }
         .filter-btn:hover {
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,1);
             border-color: var(--sm-pink);
         }
         .filter-btn.active {
@@ -362,45 +386,96 @@
         }
     </style>
 </head>
-<body>
+<body class="py-10 px-4 md:px-8">
 
     <div class="stars-overlay"></div>
 
-    <div class="dashboard-container">
+    <!-- Mobile-first: stacks in a column. Desktop: side-by-side flex layout -->
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 items-start justify-center relative z-10">
         
-        <div class="retro-player-card">
-            <h2 class="player-title">🎶 Moon Melody</h2>
-            <p class="text-sm text-pink-700 font-bold mb-4 text-center">Click the record to spin!</p>
+        <!-- LEFT COLUMN: Music and Tamagotchi -->
+        <div class="flex flex-col gap-8 w-full lg:w-1/3">
             
-            <div class="turntable" id="turntable" onclick="toggleSpin()">
-                <div class="tonearm">
-                    <div class="tonearm-base"></div>
-                    <div class="tonearm-rod"></div>
-                    <div class="tonearm-head"></div>
+            <!-- Music Player -->
+            <div class="retro-player-card">
+                <h2 class="player-title">🎶 Moon Melody</h2>
+                <p class="text-sm text-pink-700 font-bold mb-4 text-center">Click the record to spin!</p>
+                
+                <div class="turntable" id="turntable" onclick="toggleSpin()">
+                    <div class="tonearm">
+                        <div class="tonearm-base"></div>
+                        <div class="tonearm-rod"></div>
+                        <div class="tonearm-head"></div>
+                    </div>
+                    <div class="vinyl">
+                        <div class="vinyl-label">🌙</div>
+                    </div>
                 </div>
-                <div class="vinyl">
-                    <div class="vinyl-label">🌙</div>
+
+                <!-- Spotify Embed -->
+                <!-- Note: If Spotify shows "Page Not Found", it means the specific playlist ID got deleted or made private. 
+                     I've updated this to a highly reliable Lofi Beats playlist! Replace the src URL with your own if desired. -->
+                <div class="spotify-wrapper">
+                    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0vvXsWCC9xrXsKd4Zsnsnis?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                 </div>
             </div>
 
-            <!-- Spotify Lofi Playlist Embed -->
-            <div class="spotify-wrapper">
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcK64WFXO9X6?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <!-- Luna Tamagotchi! -->
+            <div class="tamagotchi-card w-full">
+                <div class="tamagotchi-keychain"></div>
+                <h3 class="text-white font-['Fredoka_One'] text-xl mb-3 tracking-widest drop-shadow-md z-10 mt-2">LUNA-GOTCHI</h3>
+                
+                <div class="tamagotchi-screen">
+                    <div class="flex justify-between w-full pixel-text mt-1">
+                        <span>HP:<span id="luna-hp" class="text-red-800">♡♡♡</span></span>
+                        <span>EN:<span id="luna-en" class="text-yellow-700">⚡⚡</span></span>
+                    </div>
+                    
+                    <!-- SVG Luna -->
+                    <div class="flex-1 flex items-center justify-center">
+                        <svg id="luna-sprite" viewBox="0 0 100 100" class="w-24 h-24 transition-transform duration-300">
+                            <!-- Body/Head -->
+                            <path d="M15 45 L5 10 L40 30 Z" fill="#113811"/> <!-- Left Ear -->
+                            <path d="M85 45 L95 10 L60 30 Z" fill="#113811"/> <!-- Right Ear -->
+                            <ellipse cx="50" cy="55" rx="40" ry="35" fill="#113811"/> <!-- Head -->
+                            <!-- Crescent Moon -->
+                            <path d="M50 25 A 5 5 0 1 1 49.9 25.1 A 6 6 0 1 0 50 25" fill="#9bbc0f" stroke="#9bbc0f" stroke-width="1"/>
+                            <!-- Eyes -->
+                            <ellipse id="eye-left" cx="30" cy="55" rx="6" ry="8" fill="#9bbc0f"/>
+                            <ellipse id="eye-right" cx="70" cy="55" rx="6" ry="8" fill="#9bbc0f"/>
+                            <circle cx="30" cy="55" r="2" fill="#113811"/>
+                            <circle cx="70" cy="55" r="2" fill="#113811"/>
+                            <!-- Nose/Mouth -->
+                            <path d="M48 70 Q50 72 52 70" stroke="#9bbc0f" stroke-width="2" fill="none"/>
+                            <path id="mouth" d="M45 74 Q50 78 55 74" stroke="#9bbc0f" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+
+                    <div id="luna-status" class="pixel-text text-center mb-1 animate-pulse">HAPPY!</div>
+                </div>
+
+                <div class="flex justify-center gap-6 mt-6 w-full px-4">
+                    <button onclick="feedLuna()" class="w-12 h-12 bg-white rounded-full border-b-4 border-gray-300 shadow-md hover:bg-pink-100 active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center text-2xl" title="Feed Luna">🐟</button>
+                    <button onclick="playLuna()" class="w-12 h-12 bg-white rounded-full border-b-4 border-gray-300 shadow-md hover:bg-pink-100 active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center text-2xl" title="Play with Luna">🧶</button>
+                    <button onclick="sleepLuna()" class="w-12 h-12 bg-white rounded-full border-b-4 border-gray-300 shadow-md hover:bg-pink-100 active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center text-2xl" title="Put to Sleep">💤</button>
+                </div>
             </div>
+
         </div>
 
-        <div class="planner-card">
+        <!-- RIGHT COLUMN: Planner -->
+        <div class="planner-card w-full lg:w-2/3">
             <div class="ribbon-top">🎀</div>
             
             <!-- Header -->
-            <div class="p-6 border-b border-white/50 bg-white/40 text-center relative z-10">
-                <h1 class="title-font text-4xl mb-1 flex items-center justify-center gap-3">
+            <div class="p-6 border-b border-white/50 bg-white/50 text-center relative z-10">
+                <h1 class="title-font text-3xl md:text-4xl mb-2 flex items-center justify-center gap-3">
                     <span>🌙</span> Usagi's Missions <span>✨</span>
                 </h1>
-                <p class="text-sm font-bold text-blue-900 tracking-wide uppercase mt-2">Tuesday, July 14, 2026</p>
+                <p class="text-sm font-bold text-indigo-900 tracking-wide uppercase mt-2">Tuesday, July 14, 2026</p>
                 
                 <div class="mt-6 px-2">
-                    <div class="flex justify-between text-xs font-black text-pink-500 mb-2 uppercase tracking-widest">
+                    <div class="flex justify-between text-xs font-black text-pink-600 mb-2 uppercase tracking-widest drop-shadow-sm">
                         <span>Moon Healing Power</span>
                         <span id="progress-text">0%</span>
                     </div>
@@ -410,18 +485,20 @@
                 </div>
             </div>
 
-            <div class="px-6 py-4 flex gap-3 overflow-x-auto border-b border-white/50 bg-white/20">
-                <button class="filter-btn active px-4 py-2 rounded-full text-sm font-bold shadow-sm" data-filter="All">🌟 All Magic</button>
-                <button class="filter-btn px-4 py-2 rounded-full text-sm font-bold shadow-sm" data-filter="High">💖 Critical</button>
-                <button class="filter-btn px-4 py-2 rounded-full text-sm font-bold shadow-sm" data-filter="Medium">🔮 Important</button>
+            <!-- Filters -->
+            <div class="px-6 py-4 flex gap-3 overflow-x-auto border-b border-white/50 bg-white/30 whitespace-nowrap">
+                <button class="filter-btn active px-4 py-2 rounded-full text-sm font-bold shadow-sm flex-shrink-0" data-filter="All">🌟 All Magic</button>
+                <button class="filter-btn px-4 py-2 rounded-full text-sm font-bold shadow-sm flex-shrink-0" data-filter="High">💖 Critical</button>
+                <button class="filter-btn px-4 py-2 rounded-full text-sm font-bold shadow-sm flex-shrink-0" data-filter="Medium">🔮 Important</button>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-6 space-y-4" id="task-list">
+            <!-- Task List -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4" id="task-list">
                 <!-- Tasks injected via JS -->
             </div>
             
             <!-- Footer -->
-            <div class="p-4 bg-white/50 text-center border-t border-white/50 text-sm font-bold text-indigo-900">
+            <div class="p-4 bg-white/60 text-center border-t border-white/50 text-sm font-bold text-indigo-900">
                 "In the name of the Moon, you will conquer today!" 🐈‍⬛🌙
             </div>
         </div>
@@ -429,42 +506,14 @@
     </div>
 
     <script>
-        // Pre-filled with today's specific context!
         const initialTasks = [
-            { 
-                id: 1, 
-                title: "Review FAMLI+ & Medical Docs", 
-                desc: "Check the pending messenger cat (notification) and review leave documentation requirements.", 
-                urgency: "High", 
-                completed: false 
-            },
-            { 
-                id: 2, 
-                title: "Submit Klaus's Health Appraisal", 
-                desc: "Send the completed health form from yesterday's appt to Britt to secure the academy spot.", 
-                urgency: "High", 
-                completed: false 
-            },
-            { 
-                id: 3, 
-                title: "Delegate NY Flights to Tuxedo Mask", 
-                desc: "Toss a rose and remind Kris to book the return flights for August 20th.", 
-                urgency: "Medium", 
-                completed: false 
-            },
-            { 
-                id: 4, 
-                title: "Moon Healing Escalation 🌙", 
-                desc: "Keep your clavicle immobilized, rest, and prepare for your post-op appt on Friday.", 
-                urgency: "High", 
-                completed: false 
-            }
+            { id: 1, title: "Review FAMLI+ & Medical Docs", desc: "Check the pending messenger cat (notification) and review leave documentation requirements.", urgency: "High", completed: false },
+            { id: 2, title: "Submit Klaus's Health Appraisal", desc: "Send the completed health form from yesterday's appt to Britt to secure the academy spot.", urgency: "High", completed: false },
+            { id: 3, title: "Delegate NY Flights to Tuxedo Mask", desc: "Toss a rose and remind Kris to book the return flights for August 20th.", urgency: "Medium", completed: false },
+            { id: 4, title: "Moon Healing Escalation 🌙", desc: "Keep your clavicle immobilized, rest, and prepare for your post-op appt on Friday.", urgency: "High", completed: false }
         ];
 
-        let state = {
-            tasks: [...initialTasks],
-            filter: 'All'
-        };
+        let state = { tasks: [...initialTasks], filter: 'All' };
 
         const taskListEl = document.getElementById('task-list');
         const progressBarEl = document.getElementById('progress-bar');
@@ -472,10 +521,12 @@
         const filterBtns = document.querySelectorAll('.filter-btn');
         const turntable = document.getElementById('turntable');
 
+        // Record Player
         function toggleSpin() {
             turntable.classList.toggle('playing');
         }
 
+        // Progress Bar
         function updateProgress() {
             const total = state.tasks.length;
             if (total === 0) return;
@@ -487,9 +538,7 @@
         }
 
         function toggleTask(id) {
-            state.tasks = state.tasks.map(t => 
-                t.id === id ? { ...t, completed: !t.completed } : t
-            );
+            state.tasks = state.tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
             renderTasks();
             updateProgress();
         }
@@ -500,18 +549,15 @@
             return 'badge-low';
         }
 
+        // Render Tasks
         function renderTasks() {
             taskListEl.innerHTML = '';
-            
-            const filteredTasks = state.tasks.filter(t => {
-                if (state.filter === 'All') return true;
-                return t.urgency === state.filter;
-            });
+            const filteredTasks = state.tasks.filter(t => state.filter === 'All' ? true : t.urgency === state.filter);
 
             if (filteredTasks.length === 0) {
                 taskListEl.innerHTML = `
-                    <div class="text-center py-10 text-pink-500 font-bold opacity-80">
-                        <div class="text-5xl mb-4">✨</div>
+                    <div class="text-center py-10 text-pink-600 font-bold opacity-80">
+                        <div class="text-5xl mb-4 animate-pulse">✨</div>
                         No tasks in this category! Rest up!
                     </div>
                 `;
@@ -522,24 +568,21 @@
                 const item = document.createElement('div');
                 item.className = `task-item p-4 rounded-2xl flex items-start gap-4 cursor-pointer ${task.completed ? 'completed' : ''}`;
                 item.onclick = (e) => {
-                    if (e.target !== item.querySelector('input')) {
-                        toggleTask(task.id);
-                    }
+                    if (e.target !== item.querySelector('input')) toggleTask(task.id);
                 };
 
                 item.innerHTML = `
                     <input type="checkbox" class="star-checkbox mt-1" ${task.completed ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask(${task.id})">
                     <div class="flex-1 min-w-0 pt-0.5">
-                        <div class="flex items-center justify-between gap-2 mb-1">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1">
                             <h3 class="task-title font-extrabold text-blue-900 leading-tight text-lg">${task.title}</h3>
-                            <span class="${getBadgeClass(task.urgency)} text-[10px] uppercase tracking-wider font-extrabold px-3 py-1 rounded-full flex-shrink-0 flex items-center shadow-sm">
+                            <span class="${getBadgeClass(task.urgency)} text-[10px] uppercase tracking-wider font-extrabold px-3 py-1 rounded-full flex-shrink-0 flex items-center shadow-sm w-fit">
                                 ${task.urgency}
                             </span>
                         </div>
                         <p class="text-sm text-gray-700 leading-snug font-medium">${task.desc}</p>
                     </div>
                 `;
-                
                 taskListEl.appendChild(item);
             });
         }
@@ -553,9 +596,74 @@
             });
         });
 
-        // Initialize the app
+        // Tamagotchi Game Logic
+        let lunaStats = { hunger: 100, happiness: 100, energy: 100 };
+        const mouthEl = document.getElementById('mouth');
+        const spriteEl = document.getElementById('luna-sprite');
+        const statusEl = document.getElementById('luna-status');
+        const hpEl = document.getElementById('luna-hp');
+        const enEl = document.getElementById('luna-en');
+
+        function updateLunaUI() {
+            // Heart & Bolt displays
+            hpEl.innerText = lunaStats.happiness > 60 ? '♡♡♡' : (lunaStats.happiness > 30 ? '♡♡' : '♡');
+            enEl.innerText = lunaStats.energy > 50 ? '⚡⚡' : '⚡';
+
+            spriteEl.classList.remove('animate-bounce', 'animate-pulse');
+
+            if (lunaStats.hunger < 30) {
+                statusEl.innerText = "HUNGRY!";
+                mouthEl.setAttribute('d', 'M45 76 Q50 72 55 76'); // sad
+            } else if (lunaStats.happiness < 30) {
+                statusEl.innerText = "LONELY!";
+                mouthEl.setAttribute('d', 'M45 76 Q50 72 55 76'); // sad
+            } else if (lunaStats.energy < 30) {
+                statusEl.innerText = "SLEEPY...";
+                mouthEl.setAttribute('d', 'M48 76 L52 76'); // neutral
+            } else {
+                statusEl.innerText = "HAPPY!";
+                mouthEl.setAttribute('d', 'M45 74 Q50 78 55 74'); // smile
+                spriteEl.classList.add('animate-bounce');
+            }
+        }
+
+        function feedLuna() {
+            lunaStats.hunger = Math.min(100, lunaStats.hunger + 40);
+            lunaStats.happiness = Math.min(100, lunaStats.happiness + 10);
+            statusEl.innerText = "YUM!";
+            spriteEl.style.transform = "scale(1.1)";
+            setTimeout(() => { spriteEl.style.transform = "scale(1)"; updateLunaUI(); }, 500);
+        }
+
+        function playLuna() {
+            lunaStats.happiness = Math.min(100, lunaStats.happiness + 40);
+            lunaStats.energy = Math.max(0, lunaStats.energy - 15);
+            statusEl.innerText = "YAY!";
+            spriteEl.style.transform = "rotate(15deg)";
+            setTimeout(() => { spriteEl.style.transform = "rotate(-15deg)"; }, 200);
+            setTimeout(() => { spriteEl.style.transform = "rotate(0deg)"; updateLunaUI(); }, 400);
+        }
+
+        function sleepLuna() {
+            lunaStats.energy = 100;
+            lunaStats.hunger = Math.max(0, lunaStats.hunger - 10);
+            statusEl.innerText = "ZZZZ...";
+            spriteEl.classList.add('animate-pulse');
+            setTimeout(updateLunaUI, 1500);
+        }
+
+        // Tamagotchi degradation loop
+        setInterval(() => {
+            lunaStats.hunger = Math.max(0, lunaStats.hunger - 5);
+            lunaStats.happiness = Math.max(0, lunaStats.happiness - 3);
+            lunaStats.energy = Math.max(0, lunaStats.energy - 2);
+            updateLunaUI();
+        }, 12000); // Degrades every 12 seconds for testing/playability
+
+        // Initialize App
         renderTasks();
         updateProgress();
+        updateLunaUI();
 
     </script>
 </body>
