@@ -29,6 +29,7 @@
             min-height: 100vh;
             color: #fff;
             overflow-x: hidden;
+            /* Glowing Pink star cursor */
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z" fill="%23FF69B4" stroke="%23FFF" stroke-width="1.5"/></svg>'), auto;
         }
 
@@ -68,120 +69,797 @@
         .poster-caption { font-family: 'VT323', monospace; text-align: center; margin-top: 5px; font-size: 1.2rem; color: #333; }
         .tape { position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-5deg); width: 40px; height: 15px; background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-        /* CD Player */
-        .cd-player-container { background: rgba(255, 105, 180, 0.2); backdrop-filter: blur(15px); border: 4px solid rgba(255, 182, 193, 0.5); border-radius: 40px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 30px rgba(255,255,255,0.4); position: relative; }
-        .cd-player-body { width: 260px; height: 260px; background: linear-gradient(135deg, #ffc0cb, #ff69b4); border-radius: 50%; margin: 0 auto 20px auto; border: 8px solid #ff1493; box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), 0 15px 25px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; position: relative; }
-        .cd-disk { width: 190px; height: 190px; border-radius: 50%; background: repeating-radial-gradient(#ddd, #ccc 2px, #fff 4px); display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.5s ease; }
+        /* --- NEW Y2K CD PLAYER --- */
+        .cd-player-container {
+            background: rgba(255, 105, 180, 0.2);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 4px solid rgba(255, 182, 193, 0.5);
+            border-radius: 40px; padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 30px rgba(255,255,255,0.4);
+            position: relative;
+        }
+
+        .cd-player-body {
+            width: 260px; height: 260px;
+            background: linear-gradient(135deg, #ffc0cb, #ff69b4);
+            border-radius: 50%; margin: 0 auto 20px auto;
+            border: 8px solid #ff1493;
+            box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), 0 15px 25px rgba(0,0,0,0.5);
+            display: flex; justify-content: center; align-items: center;
+            position: relative;
+        }
+
+        .cd-lid-window {
+            width: 210px; height: 210px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.5);
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.8);
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* The Holographic CD */
+        .cd-disk {
+            width: 190px; height: 190px;
+            border-radius: 50%;
+            background: repeating-radial-gradient(#ddd, #ccc 2px, #fff 4px);
+            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: transform 0.5s ease;
+        }
+        .cd-disk::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%;
+            background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+            mix-blend-mode: color-burn; opacity: 0.5;
+        }
         .cd-disk.spin { animation: spinRecord 1.5s linear infinite; }
+        
+        /* Center hole of the CD */
+        .cd-center-hole {
+            width: 35px; height: 35px;
+            background: #222; border-radius: 50%; z-index: 10;
+            border: 3px solid rgba(255,255,255,0.8);
+            box-shadow: inset 0 0 10px rgba(0,0,0,1);
+        }
+
         @keyframes spinRecord { 100% { transform: rotate(360deg); } }
 
-        /* TV */
-        .retro-tv { background: rgba(147, 112, 219, 0.4); backdrop-filter: blur(12px); border-radius: 30px; padding: 20px; border: 2px solid rgba(255,255,255,0.5); box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: flex; gap: 15px; position: relative; }
-        .tv-screen-container { flex-grow: 1; background: #111; border-radius: 20px; border: 8px solid #222; position: relative; overflow: hidden; aspect-ratio: 16/9; }
-        
-        /* Tamagotchi */
-        .tamagotchi-3d { background: rgba(255, 105, 180, 0.3); backdrop-filter: blur(10px); border: 6px solid rgba(255,255,255,0.6); border-radius: 40% 40% 50% 50% / 55% 55% 45% 45%; padding: 35px 25px 25px 25px; }
-        .tama-screen { background: #8b9a46; border: 6px solid #222; border-radius: 20px; width: 100%; aspect-ratio: 1 / 1; font-family: 'Press Start 2P', monospace; }
-        .tama-btn { width: 40px; height: 35px; background: rgba(255,255,255,0.9); border-radius: 50% 50% 10% 10%; border: none; border-bottom: 6px solid #aaa; box-shadow: 0 5px 8px rgba(0,0,0,0.4); }
-        .tama-btn:active { transform: translateY(6px); }
+        /* CD Rack (Mini CDs) */
+        .cd-rack { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .mini-cd {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: repeating-radial-gradient(#ddd, #ccc 2px, #fff 4px);
+            border: 2px solid #aaa; display: flex; justify-content: center; align-items: center;
+            position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .mini-cd:hover { transform: translateY(-10px) scale(1.1); box-shadow: 0 10px 15px var(--sm-hotpink); border-color: var(--sm-hotpink); z-index: 10; }
+        .mini-cd::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%;
+            background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); mix-blend-mode: overlay; opacity: 0.6;
+        }
+        .mini-cd-hole { width: 12px; height: 12px; background: transparent; border: 2px solid #fff; border-radius: 50%; z-index: 5; }
+        .cd-1 { background-color: #ffb6c1; mix-blend-mode: normal; } /* Pink tint */
+        .cd-2 { background-color: #87ceeb; mix-blend-mode: normal; } /* Blue tint */
+        .cd-3 { background-color: #ffd700; mix-blend-mode: normal; } /* Gold tint */
 
-        .phygital-modal { background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(20px); border: 4px solid var(--sm-hotpink); border-radius: 30px; }
+        /* Player Controls */
+        .magical-controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
+        .magical-btn {
+            width: 40px; height: 40px; background: linear-gradient(135deg, #fff, #ffd700);
+            border-radius: 50%; border: 2px solid #ffaa00;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,1);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.2rem; transition: all 0.1s; color: black;
+        }
+        .magical-btn:active { transform: translateY(4px); box-shadow: 0 0px 2px rgba(0,0,0,0.4); }
+
+        /* Atomic Purple Retro TV */
+        .retro-tv {
+            background: rgba(147, 112, 219, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-radius: 30px; padding: 20px; border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.4), inset 0 0 5px rgba(255,255,255,0.8);
+            display: flex; gap: 15px; position: relative;
+        }
+        .tv-antennas { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); display: flex; gap: 40px; pointer-events: none; }
+        .antenna { width: 4px; height: 50px; background: linear-gradient(to right, #ccc, #fff, #aaa); border-radius: 4px; position: relative; }
+        .antenna::after { content: ''; position: absolute; top: -8px; left: -4px; width: 12px; height: 12px; background: var(--sm-hotpink); border-radius: 50%; box-shadow: 0 0 10px var(--sm-hotpink); }
+        .antenna.left { transform: rotate(-30deg); } .antenna.right { transform: rotate(30deg); }
+        .tv-screen-container { flex-grow: 1; background: #111; border-radius: 20px; border: 8px solid #222; box-shadow: inset 0 0 20px rgba(0,0,0,1), 0 0 15px rgba(0,0,0,0.5); position: relative; overflow: hidden; aspect-ratio: 16/9; }
+        .tv-screen-container::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; background-size: 100% 3px, 3px 100%; pointer-events: none; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+        .tv-dials { width: 40px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; }
+        .tv-knob { width: 35px; height: 35px; background: radial-gradient(circle, #f8c8d8, #d8a8b8); border-radius: 50%; border: 2px solid #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.5); position: relative; }
+        .tv-knob::after { content: ''; position: absolute; top: 5px; left: 50%; transform: translateX(-50%); width: 4px; height: 10px; background: var(--sm-purple); border-radius: 2px; }
+
+        /* Cosmic Translucent Tamagotchi */
+        .tamagotchi-3d {
+            background: rgba(255, 105, 180, 0.3); backdrop-filter: blur(10px);
+            border: 6px solid rgba(255,255,255,0.6); box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.6);
+            border-radius: 40% 40% 50% 50% / 55% 55% 45% 45%; padding: 35px 25px 25px 25px; position: relative; display: flex; flex-direction: column; align-items: center;
+        }
+        .tama-chain { position: absolute; top: -25px; width: 40px; height: 40px; border: 6px solid #e0e0e0; border-radius: 50%; box-shadow: 0 5px 10px rgba(0,0,0,0.4), inset 0 2px 5px rgba(255,255,255,0.9); z-index: -1; }
+        .tama-screen { background: #8b9a46; border: 6px solid #222; border-radius: 20px; width: 100%; aspect-ratio: 1 / 1; box-shadow: inset 5px 5px 20px rgba(0,0,0,0.8), 0 2px 4px rgba(255,255,255,0.3); font-family: 'Press Start 2P', monospace; color: #111; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; position: relative; overflow: hidden; }
+        .tama-screen::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 4px 4px; pointer-events: none; }
+        .tama-btn { width: 40px; height: 35px; background: rgba(255,255,255,0.9); border-radius: 50% 50% 10% 10%; border: none; border-bottom: 6px solid #aaa; box-shadow: 0 5px 8px rgba(0,0,0,0.4); font-size: 1.1rem; transition: all 0.1s; display: flex; justify-content: center; align-items: center; }
+        .tama-btn:active { transform: translateY(6px); border-bottom: 0px solid #aaa; box-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+        .pixel-text { font-size: 9px; z-index: 10; position: relative; }
+
+        /* Art Corner Sketchpad (Procreate-Lite + AR) */
+        .sketchpad-container {
+            background: rgba(253, 251, 247, 0.9); backdrop-filter: blur(5px);
+            border-radius: 5px 25px 25px 5px; padding: 20px;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.5), inset -5px -5px 15px rgba(0,0,0,0.05);
+            position: relative; border-right: 4px solid #ccc; border-bottom: 4px solid #ccc;
+        }
+        .color-btn { width: 25px; height: 25px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.4); transition: transform 0.1s; }
+        .color-btn:active, .color-btn.selected { transform: scale(1.2); border-color: #333; }
+        .procreate-toolbar { background: rgba(255,255,255,0.8); border-radius: 10px; padding: 10px; margin-bottom: 10px; box-shadow: inset 0 0 5px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+        .tool-slider { display: flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: bold; }
+        .tool-slider input[type=range] { width: 60px; accent-color: var(--sm-hotpink); }
+        .brush-btn { padding: 4px 8px; border-radius: 6px; border: 2px solid #ccc; font-size: 0.8rem; font-weight: bold; background: white; transition: 0.2s; }
+        .brush-btn.active { border-color: var(--sm-hotpink); background: #ffe4e1; color: var(--sm-hotpink); }
+        
+        .canvas-wrapper { position: relative; width: 100%; height: 256px; border-radius: 8px; overflow: hidden; border: 2px solid #d8b4e2; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+        #ar-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; background-color: #fff; }
+        #art-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: crosshair; touch-action: none; background-color: transparent; }
+
+        @keyframes bounceLuna { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes sleepPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* Phygital Modal */
+        .phygital-modal {
+            background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 4px solid var(--sm-hotpink); border-radius: 30px; box-shadow: 0 0 50px var(--sm-hotpink);
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000;
+            width: 90%; max-width: 800px; padding: 30px; display: flex; flex-direction: column; align-items: center;
+        }
     </style>
 </head>
 <body class="py-10 px-4 md:px-8 relative">
 
+    <!-- Magical Matrix Canvas -->
     <canvas id="matrix-canvas"></canvas>
 
-    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start relative z-10">
+    <!-- Fairy Lights -->
+    <ul class="fairy-lights">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <!-- Cosmic Background Stars Container -->
+    <div class="stars-container" id="stars-container"></div>
+
+    <!-- Room Posters (Polaroids) -->
+    <div class="hidden lg:block">
+        <div class="poster" style="top: 15%; left: 3%; transform: rotate(-8deg);">
+            <div class="tape"></div>
+            <img src="https://placehold.co/150x150/ffb6c1/ffffff?text=BFFs+4Ever" alt="Friends">
+            <div class="poster-caption text-black">Squad ✨</div>
+        </div>
+        <div class="poster" style="top: 45%; left: 6%; transform: rotate(5deg);">
+            <div class="tape"></div>
+            <img src="https://placehold.co/150x150/87ceeb/ffffff?text=Tuxedo+Mask" alt="Crush">
+            <div class="poster-caption text-black">T.M. 🌹</div>
+        </div>
+        <div class="poster" style="top: 20%; right: 4%; transform: rotate(6deg);">
+            <div class="tape"></div>
+            <img src="https://placehold.co/150x150/9370db/ffffff?text=Tokyo+Vibes" alt="Tokyo">
+            <div class="poster-caption text-black">Goals 🗼</div>
+        </div>
+    </div>
+
+    <!-- Main Content Flex -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start relative z-10 mt-8">
         
-        <!-- COLUMN 1 -->
-        <div class="flex flex-col gap-10">
-            <div class="cd-player-container max-w-[400px] mx-auto w-full">
-                <h2 class="text-center font-['Fredoka_One'] text-white text-2xl mb-4">💿 Moon CD Player</h2>
-                <div class="cd-player-body mx-auto">
-                    <div class="cd-disk spin" id="active-cd"></div>
-                </div>
-                <div class="flex justify-center gap-4">
-                    <button onclick="changeCD(0)" class="w-12 h-12 bg-pink-300 rounded-full"></button>
-                    <button onclick="changeCD(1)" class="w-12 h-12 bg-blue-300 rounded-full"></button>
-                    <button onclick="changeCD(2)" class="w-12 h-12 bg-yellow-300 rounded-full"></button>
-                </div>
-                <iframe id="spotify-iframe" class="mt-4" src="https://open.spotify.com/embed/album/2IevUWpkZ9KUcr6ZhtklE0" width="100%" height="152" frameBorder="0"></iframe>
-            </div>
-
-            <div class="tamagotchi-3d max-w-[320px] mx-auto">
-                <div class="tama-screen p-4 flex flex-col items-center justify-center">
-                    <svg id="luna-sprite" viewBox="0 0 100 100" class="w-24 h-24">
-                        <ellipse cx="50" cy="55" rx="45" ry="38" fill="#111"/> 
-                        <path d="M50 25 A 6 6 0 1 1 49.9 25.1 A 7 7 0 1 0 50 25" fill="#8b9a46"/>
-                        <ellipse cx="28" cy="55" rx="9" ry="14" fill="#8b9a46"/>
-                        <ellipse cx="72" cy="55" rx="9" ry="14" fill="#8b9a46"/>
-                        <path id="mouth" d="M45 76 Q50 82 55 76" stroke="#8b9a46" stroke-width="2" fill="none"/>
-                    </svg>
-                </div>
-                <div class="flex justify-center gap-2 mt-4">
-                    <button onclick="feedLuna()" class="tama-btn">🍙</button>
-                    <button onclick="playLuna()" class="tama-btn">✨</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- COLUMN 2 -->
-        <div class="flex flex-col gap-10">
-            <div class="retro-tv w-full max-w-[550px] mx-auto">
-                <div class="tv-screen-container">
-                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/vCCamwjcumM" allowfullscreen></iframe>
-                </div>
-            </div>
+        <!-- LEFT COLUMN: Music and Tamagotchi -->
+        <div class="flex flex-col gap-10 z-20">
             
-            <div class="sketchpad-container bg-white/90 p-6 rounded-3xl">
-                <h2 class="text-xl font-['Fredoka_One'] text-purple-600 mb-4">Cosmic Canvas 🎨</h2>
-                <canvas id="art-canvas" class="w-full h-64 border-4 border-pink-300 rounded-lg cursor-crosshair"></canvas>
-                <button onclick="makePhygital()" class="mt-4 w-full bg-pink-500 text-white font-bold p-3 rounded-full">Phygital Portal 🌌</button>
+            <!-- NEW: 3D Y2K CD Player -->
+            <div class="cd-player-container max-w-[400px] mx-auto w-full">
+                <h2 class="text-center font-['Fredoka_One'] text-white text-2xl mb-4 drop-shadow-md tracking-wider">💿 Moon CD Player</h2>
+                
+                <!-- CD Rack -->
+                <div class="cd-rack" title="Pick a CD to play!">
+                    <div class="mini-cd cd-1" onclick="changeCD(0)" title="Album 1">
+                        <div class="mini-cd-hole"></div>
+                    </div>
+                    <div class="mini-cd cd-2" onclick="changeCD(1)" title="Playlist 2">
+                        <div class="mini-cd-hole"></div>
+                    </div>
+                    <div class="mini-cd cd-3" onclick="changeCD(2)" title="Album 3">
+                        <div class="mini-cd-hole"></div>
+                    </div>
+                </div>
+
+                <!-- CD Player Body -->
+                <div class="cd-player-body mx-auto">
+                    <div class="cd-lid-window">
+                        <!-- Spinning CD Inside -->
+                        <div class="cd-disk spin" id="active-cd">
+                            <div class="cd-center-hole"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Magical Controls -->
+                <div class="magical-controls" title="Magical Audio Panel!">
+                    <button class="magical-btn" onclick="playMagicalSound('prev')">⭐</button>
+                    <button class="magical-btn" onclick="playMagicalSound('play')">⏯</button>
+                    <button class="magical-btn" onclick="playMagicalSound('next')">⭐</button>
+                </div>
+
+                <!-- Spotify Embed -->
+                <div class="w-full rounded-xl overflow-hidden shadow-lg border-2 border-white">
+                    <iframe id="spotify-iframe" src="https://open.spotify.com/embed/album/2IevUWpkZ9KUcr6ZhtklE0?utm_source=generator&si=06243e0d201747c2" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                </div>
             </div>
+
+            <!-- Cosmic 3D Luna-Gotchi 3.0 -->
+            <div class="tamagotchi-3d w-full max-w-[320px] mx-auto">
+                <div class="tama-chain"></div>
+                <h3 class="text-white font-['Fredoka_One'] text-xl mb-4 tracking-widest drop-shadow-md z-10 text-center">LUNA-GOTCHI</h3>
+                
+                <div class="tama-screen">
+                    <div class="flex justify-between w-full pixel-text mt-1">
+                        <span>HP:<span id="luna-hp">♥♥♥</span></span>
+                        <span>LVL:<span id="luna-lvl">1</span></span>
+                        <span>EN:<span id="luna-en">⚡⚡</span></span>
+                    </div>
+                    
+                    <!-- SVG Luna -->
+                    <div class="flex-1 flex items-center justify-center z-10 relative">
+                        <svg id="luna-sprite" viewBox="0 0 100 100" class="w-24 h-24 transition-all duration-300">
+                            <!-- Ears -->
+                            <path d="M20 40 L5 5 L45 25 Z" fill="#111"/> 
+                            <path d="M80 40 L95 5 L55 25 Z" fill="#111"/> 
+                            <!-- Head -->
+                            <ellipse cx="50" cy="55" rx="45" ry="38" fill="#111"/> 
+                            <!-- Moon -->
+                            <path d="M50 25 A 6 6 0 1 1 49.9 25.1 A 7 7 0 1 0 50 25" fill="#8b9a46" stroke="#8b9a46" stroke-width="1"/>
+                            <!-- Big Anime Eyes -->
+                            <ellipse id="eye-left" cx="28" cy="55" rx="9" ry="14" fill="#8b9a46"/>
+                            <ellipse id="eye-right" cx="72" cy="55" rx="9" ry="14" fill="#8b9a46"/>
+                            <!-- Pupils -->
+                            <ellipse id="pupil-l" cx="30" cy="52" rx="4" ry="7" fill="#111"/>
+                            <ellipse id="pupil-r" cx="70" cy="52" rx="4" ry="7" fill="#111"/>
+                            <!-- Nose/Mouth -->
+                            <path d="M48 72 L50 74 L52 72" stroke="#8b9a46" stroke-width="2" fill="none"/>
+                            <path id="mouth" d="M45 76 Q50 82 55 76" stroke="#8b9a46" stroke-width="2" fill="none"/>
+                        </svg>
+                        
+                        <div id="luna-overlay" class="absolute top-0 right-4 text-xs font-['Press_Start_2P'] hidden">Zzz</div>
+                    </div>
+
+                    <div id="luna-status" class="pixel-text text-center mb-1">HAPPY!</div>
+                </div>
+
+                <!-- Upgraded Buttons (Now 5 items) -->
+                <div class="flex flex-wrap justify-center gap-2 mt-6 w-full z-10">
+                    <button onclick="feedLuna()" class="tama-btn" title="Feed">🍙</button>
+                    <button onclick="playLuna()" class="tama-btn" title="Play">✨</button>
+                    <button onclick="cleanLuna()" class="tama-btn" title="Clean">🧹</button>
+                    <button onclick="sleepLuna()" class="tama-btn" title="Sleep">💤</button>
+                    <button onclick="quantumLuna()" class="tama-btn bg-pink-100" title="Quantum Magic!" style="border-bottom-color: #ff69b4;">🌌</button>
+                </div>
+            </div>
+
         </div>
+
+        <!-- RIGHT COLUMN: TV and Art Corner -->
+        <div class="flex flex-col gap-10 z-20">
+            
+            <!-- Atomic Purple Retro 90s TV playing Selena -->
+            <div class="retro-tv w-full max-w-[550px] mx-auto mt-6">
+                <div class="tv-antennas">
+                    <div class="antenna left"></div>
+                    <div class="antenna right"></div>
+                </div>
+                <div class="tv-screen-container">
+                    <iframe id="tv-iframe" class="w-full h-full" src="https://www.youtube.com/embed/vCCamwjcumM?si=Q0ZILwhwH6lnw8D4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="tv-dials">
+                    <div class="tv-knob" style="transform: rotate(45deg);"></div>
+                    <div class="tv-knob" style="transform: rotate(-20deg);"></div>
+                    <div class="w-4 h-4 bg-green-400 rounded-full shadow-inner mt-4" style="box-shadow: 0 0 10px #4ade80;"></div>
+                </div>
+            </div>
+
+            <!-- Procreate-Lite & AR Canvas -->
+            <div class="sketchpad-container w-full max-w-[500px] mx-auto text-gray-800">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="font-['Fredoka_One'] text-xl text-purple-600 drop-shadow-sm">Cosmic Canvas 🎨</h2>
+                    <div class="flex gap-2">
+                        <button onclick="makePhygital()" id="btn-phygital" class="px-3 py-1 bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold rounded-full text-xs shadow-sm hover:scale-105 transition">Phygital 3D 🌌</button>
+                        <button onclick="saveArtwork()" class="px-3 py-1 bg-pink-400 text-white font-bold rounded-full text-xs shadow-sm hover:scale-105 transition">Save 📥</button>
+                    </div>
+                </div>
+                
+                <!-- Toolbar -->
+                <div class="procreate-toolbar">
+                    <div class="flex gap-2 items-center">
+                        <input type="color" id="brush-color" value="#ff69b4" class="w-8 h-8 rounded cursor-pointer border-0 p-0" title="Custom Color">
+                        <div class="flex gap-1">
+                            <button class="color-btn selected" style="background: #ff69b4;" onclick="quickColor('#ff69b4')"></button>
+                            <button class="color-btn" style="background: #87ceeb;" onclick="quickColor('#87ceeb')"></button>
+                            <button class="color-btn" style="background: #ffffff;" onclick="quickColor('#ffffff')"></button>
+                        </div>
+                    </div>
+                    <div class="flex gap-1">
+                        <button class="brush-btn active" id="btn-normal" onclick="setBrush('normal')">Pen</button>
+                        <button class="brush-btn" id="btn-neon" onclick="setBrush('neon')">Neon</button>
+                        <button class="brush-btn" id="btn-spray" onclick="setBrush('spray')">Spray</button>
+                        <button class="brush-btn" id="btn-erase" onclick="setBrush('erase')">Erase</button>
+                    </div>
+                    <div class="flex gap-2 w-full justify-between mt-2 lg:mt-0">
+                        <div class="tool-slider">Size: <input type="range" id="brush-size" min="1" max="50" value="5"></div>
+                        <div class="tool-slider">Opac: <input type="range" id="brush-opacity" min="0.1" max="1" step="0.1" value="1"></div>
+                    </div>
+                </div>
+
+                <!-- Drawing Canvas -->
+                <div class="canvas-wrapper">
+                    <!-- The drawing surface -->
+                    <canvas id="art-canvas"></canvas>
+                </div>
+                
+                <div class="flex justify-between items-center mt-4">
+                    <button onclick="undoStroke()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 font-bold rounded-lg text-sm shadow-sm transition">↩ Undo</button>
+                    <button onclick="clearCanvas()" class="px-4 py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 border border-purple-300 font-bold rounded-lg text-sm shadow-sm transition">Clear Page</button>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
     <!-- Phygital Modal -->
-    <div id="phygital-modal" class="phygital-modal hidden fixed inset-0 z-50 flex items-center justify-center p-10">
-        <div class="bg-white p-8 rounded-3xl text-center text-black">
-            <h2 class="text-2xl font-bold mb-4">Scan the Portal!</h2>
-            <img id="qr-code" src="" class="w-48 h-48 mx-auto">
-            <button onclick="closePhygital()" class="mt-6 bg-pink-500 text-white px-6 py-2 rounded-full">Close</button>
+    <div id="phygital-modal" class="phygital-modal hidden">
+        <h2 class="text-3xl font-['Fredoka_One'] text-white mb-2 tracking-wider drop-shadow-md text-center">✨ Your Phygital Artifact ✨</h2>
+        <p class="text-pink-200 mb-6 text-center font-bold">Scan the QR code with your phone to take this 3D model with you into the real world!</p>
+        
+        <div class="flex flex-col md:flex-row gap-8 items-center w-full justify-center">
+            <!-- 3D Viewer -->
+            <div id="three-container" class="w-64 h-64 border-4 border-pink-400 rounded-xl overflow-hidden bg-black shadow-inner"></div>
+            
+            <!-- QR Code -->
+            <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow-lg border-4 border-purple-400">
+                <img id="qr-code" src="" alt="QR Code" class="w-40 h-40">
+                <p class="text-gray-800 font-bold mt-2 text-sm">Scan Me!</p>
+            </div>
         </div>
+        
+        <button onclick="closePhygital()" class="mt-8 px-6 py-2 bg-pink-500 hover:bg-pink-400 text-white font-bold rounded-full text-lg shadow-lg border-2 border-white transition-all transform hover:scale-110">Close Magic</button>
     </div>
 
     <script>
-        // Matrix Rain
+        // --- ADDED: PINK MATRIX EFFECT ---
         const mCanvas = document.getElementById('matrix-canvas');
         const mCtx = mCanvas.getContext('2d');
-        let drops = Array(Math.floor(window.innerWidth/20)).fill(1);
-        setInterval(() => {
-            mCtx.fillStyle = 'rgba(15, 12, 41, 0.1)';
-            mCtx.fillRect(0,0,window.innerWidth,window.innerHeight);
-            mCtx.fillStyle = '#ffb6c1';
-            drops.forEach((d, i) => {
-                mCtx.fillText('✧', i*20, d*20);
-                drops[i] = (d*20 > window.innerHeight && Math.random() > 0.95) ? 0 : d + 1;
-            });
-        }, 50);
-
-        // Art Canvas
-        const canvas = document.getElementById('art-canvas');
-        const aCtx = canvas.getContext('2d');
-        let drawing = false;
-        canvas.onmousedown = () => drawing = true;
-        canvas.onmouseup = () => drawing = false;
-        canvas.onmousemove = e => { if(!drawing) return; const r = canvas.getBoundingClientRect(); aCtx.fillStyle='#ff69b4'; aCtx.fillRect(e.clientX-r.left, e.clientY-r.top, 5, 5); };
-
-        function makePhygital() {
-            document.getElementById('phygital-modal').classList.remove('hidden');
-            document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}`;
+        let mWidth, mHeight, mColumns, mDrops;
+        
+        function initMatrix() {
+            mWidth = mCanvas.width = window.innerWidth;
+            mHeight = mCanvas.height = window.innerHeight;
+            mColumns = Math.floor(mWidth / 20);
+            mDrops = [];
+            for (let i = 0; i < mColumns; i++) mDrops[i] = Math.random() * -100;
         }
-        function closePhygital() { document.getElementById('phygital-modal').classList.add('hidden'); }
-        function changeCD(url) { document.getElementById('spotify-iframe').src = url; }
-        function feedLuna() { alert("Luna ate! 🍙"); }
-        function playLuna() { alert("Luna is happy! ✨"); }
+        initMatrix();
+        window.addEventListener('resize', initMatrix);
+
+        const mChars = '☽★✧✦✨01♡🌸🎀';
+        function drawMatrix() {
+            mCtx.fillStyle = 'rgba(15, 12, 41, 0.1)';
+            mCtx.fillRect(0, 0, mWidth, mHeight);
+            
+            mCtx.fillStyle = '#ffb6c1';
+            mCtx.font = '15px monospace';
+            
+            for (let i = 0; i < mDrops.length; i++) {
+                const text = mChars.charAt(Math.floor(Math.random() * mChars.length));
+                mCtx.fillText(text, i * 20, mDrops[i] * 20);
+                
+                if (mDrops[i] * 20 > mHeight && Math.random() > 0.975) mDrops[i] = 0;
+                mDrops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+
+        // --- BACKGROUND STARS ---
+        const starContainer = document.getElementById('stars-container');
+        for(let i=0; i<70; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            let size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.animationDuration = (Math.random() * 3 + 1) + 's';
+            star.style.animationDelay = (Math.random() * 2) + 's';
+            starContainer.appendChild(star);
+        }
+
+        // --- FAIRY DUST ---
+        document.addEventListener('mousemove', function(e) {
+            if(Math.random() > 0.7) createDust(e.pageX, e.pageY);
+        });
+
+        function createDust(x, y) {
+            const dust = document.createElement('div');
+            dust.className = 'fairy-dust';
+            dust.style.left = (x - 4) + 'px';
+            dust.style.top = (y - 4) + 'px';
+            const size = Math.random() * 6 + 4;
+            dust.style.width = size + 'px';
+            dust.style.height = size + 'px';
+            document.body.appendChild(dust);
+            setTimeout(() => dust.remove(), 1500);
+        }
+
+        // --- TONE.JS AUDIO ---
+        let synth;
+        let audioInitialized = false;
+
+        async function initAudio() {
+            if(audioInitialized) return;
+            await Tone.start();
+            synth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "sine" },
+                envelope: { attack: 0.05, decay: 0.1, sustain: 0.3, release: 1 }
+            }).toDestination();
+            synth.volume.value = -10;
+            audioInitialized = true;
+        }
+        document.body.addEventListener('click', initAudio, { once: true });
+
+        // --- CD PLAYER LOGIC ---
+        const cdElement = document.getElementById('active-cd');
+        const spotifyIframe = document.getElementById('spotify-iframe');
+        
+        const playlists = [
+            "https://open.spotify.com/embed/album/2IevUWpkZ9KUcr6ZhtklE0?utm_source=generator&si=06243e0d201747c2",
+            "https://open.spotify.com/embed/playlist/5QiMvqbV1bZschvqV3tPs0?utm_source=generator&si=a97ee011156b4c95",
+            "https://open.spotify.com/embed/album/3hzUq786dmch2KTVixU9Tb?utm_source=generator&si=2b196797add84c6b"
+        ];
+
+        function changeCD(index) {
+            if(audioInitialized) synth.triggerAttackRelease(["C5", "E5", "G5"], "8n");
+            cdElement.classList.remove('spin');
+            setTimeout(() => {
+                spotifyIframe.src = playlists[index];
+                cdElement.classList.add('spin');
+            }, 300);
+        }
+
+        function playMagicalSound(type) {
+            if(!audioInitialized) return;
+            if(type === 'play') {
+                synth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "4n");
+                cdElement.classList.toggle('spin');
+            } else if (type === 'next') {
+                synth.triggerAttackRelease(["G5", "C6"], "8n");
+            } else {
+                synth.triggerAttackRelease(["C6", "G5"], "8n");
+            }
+        }
+
+        // --- LUNA-GOTCHI LOGIC ---
+        let lunaStats = { hunger: 100, happiness: 100, energy: 100, hygiene: 100, isSleeping: false, isQuantum: false, xp: 0, level: 1 };
+        const mouthEl = document.getElementById('mouth');
+        const spriteEl = document.getElementById('luna-sprite');
+        const statusEl = document.getElementById('luna-status');
+        const overlayEl = document.getElementById('luna-overlay');
+        
+        function playTamaBeep(high = false) {
+            if(!audioInitialized) return;
+            const osc = new Tone.Oscillator(high ? "C6" : "C5", "square").toDestination();
+            osc.volume.value = -20;
+            osc.start().stop("+0.1");
+        }
+
+        function updateLunaUI() {
+            if(lunaStats.isQuantum) return; 
+
+            document.getElementById('luna-hp').innerText = lunaStats.happiness > 60 ? '♥♥♥' : (lunaStats.happiness > 30 ? '♥♥' : '♥');
+            document.getElementById('luna-en').innerText = lunaStats.energy > 50 ? '⚡⚡' : '⚡';
+            document.getElementById('luna-lvl').innerText = lunaStats.level;
+
+            spriteEl.style.animation = 'none';
+            spriteEl.style.filter = 'none';
+            overlayEl.classList.add('hidden');
+            overlayEl.innerText = "";
+
+            if(lunaStats.isSleeping) {
+                statusEl.innerText = "Zzz...";
+                mouthEl.setAttribute('d', 'M48 76 L52 76'); 
+                spriteEl.style.animation = 'sleepPulse 2s infinite';
+                overlayEl.innerText = "Zzz";
+                overlayEl.classList.remove('hidden');
+                return;
+            }
+
+            if (lunaStats.hygiene < 30) {
+                statusEl.innerText = "DIRTY!";
+                mouthEl.setAttribute('d', 'M45 76 Q50 72 55 76'); 
+                overlayEl.innerText = "💩";
+                overlayEl.classList.remove('hidden');
+            } else if (lunaStats.hunger < 30) {
+                statusEl.innerText = "HUNGRY!";
+                mouthEl.setAttribute('d', 'M45 76 Q50 72 55 76'); 
+            } else if (lunaStats.happiness < 30) {
+                statusEl.innerText = "LONELY!";
+                mouthEl.setAttribute('d', 'M45 76 Q50 72 55 76'); 
+            } else if (lunaStats.energy < 30) {
+                statusEl.innerText = "SLEEPY...";
+                mouthEl.setAttribute('d', 'M48 76 L52 76'); 
+            } else {
+                statusEl.innerText = "HAPPY!";
+                mouthEl.setAttribute('d', 'M45 76 Q50 82 55 76'); 
+                spriteEl.style.animation = 'bounceLuna 1.5s infinite';
+            }
+        }
+
+        function feedLuna() { if(lunaStats.isSleeping || lunaStats.isQuantum) return; playTamaBeep(); lunaStats.hunger = Math.min(100, lunaStats.hunger + 40); lunaStats.hygiene = Math.max(0, lunaStats.hygiene - 10); lunaStats.xp += 10; checkLevel(); statusEl.innerText = "YUM!"; spriteEl.style.transform = "scale(1.1)"; setTimeout(() => { spriteEl.style.transform = "scale(1)"; updateLunaUI(); }, 500); }
+        function playLuna() { if(lunaStats.isSleeping || lunaStats.isQuantum) return; playTamaBeep(true); lunaStats.happiness = Math.min(100, lunaStats.happiness + 40); lunaStats.energy = Math.max(0, lunaStats.energy - 15); lunaStats.xp += 15; checkLevel(); statusEl.innerText = "YAY!"; spriteEl.style.transform = "rotate(15deg)"; setTimeout(() => { spriteEl.style.transform = "rotate(-15deg)"; }, 200); setTimeout(() => { spriteEl.style.transform = "rotate(0deg)"; updateLunaUI(); }, 400); }
+        function cleanLuna() { if(lunaStats.isSleeping || lunaStats.isQuantum) return; playTamaBeep(true); lunaStats.hygiene = 100; lunaStats.xp += 5; checkLevel(); statusEl.innerText = "CLEAN!"; updateLunaUI(); }
+        function sleepLuna() { if(lunaStats.isQuantum) return; playTamaBeep(); lunaStats.isSleeping = !lunaStats.isSleeping; if(!lunaStats.isSleeping) lunaStats.energy = 100; updateLunaUI(); }
+
+        function checkLevel() {
+            if (lunaStats.xp >= 100) {
+                lunaStats.level += 1;
+                lunaStats.xp = 0;
+                statusEl.innerText = "LEVEL UP!";
+                if(audioInitialized) synth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "4n");
+                spriteEl.style.filter = "drop-shadow(0 0 20px #ffd700)";
+                setTimeout(() => { spriteEl.style.filter = "none"; }, 2000);
+            }
+        }
+
+        function quantumLuna() {
+            if(lunaStats.isSleeping) lunaStats.isSleeping = false;
+            lunaStats.isQuantum = true;
+            if(audioInitialized) {
+                const now = Tone.now();
+                synth.triggerAttackRelease("C4", "8n", now);
+                synth.triggerAttackRelease("E4", "8n", now + 0.1);
+                synth.triggerAttackRelease("G4", "8n", now + 0.2);
+                synth.triggerAttackRelease("B4", "8n", now + 0.3);
+                synth.triggerAttackRelease("D5", "2n", now + 0.4);
+            }
+            lunaStats.happiness = 200; lunaStats.energy = 200; lunaStats.hunger = 200; lunaStats.hygiene = 200;
+            document.getElementById('luna-hp').innerText = '♥♥♥♥♥'; document.getElementById('luna-en').innerText = '⚡⚡⚡⚡';
+            statusEl.innerText = "QUANTUM SENSHI!";
+            mouthEl.setAttribute('d', 'M45 76 Q50 82 55 76'); 
+            spriteEl.style.animation = 'bounceLuna 0.3s infinite';
+            spriteEl.style.filter = "drop-shadow(0 0 10px #ffb6c1) drop-shadow(0 0 30px #ff69b4)";
+            setTimeout(() => { lunaStats.isQuantum = false; lunaStats.happiness = 100; lunaStats.energy = 100; lunaStats.hunger = 100; lunaStats.hygiene = 100; updateLunaUI(); }, 6000);
+        }
+
+        setInterval(() => {
+            if(!lunaStats.isSleeping && !lunaStats.isQuantum) {
+                lunaStats.hunger = Math.max(0, lunaStats.hunger - 2); lunaStats.happiness = Math.max(0, lunaStats.happiness - 2); lunaStats.energy = Math.max(0, lunaStats.energy - 1); lunaStats.hygiene = Math.max(0, lunaStats.hygiene - 1);
+            } else if (lunaStats.isSleeping) { lunaStats.energy = Math.min(100, lunaStats.energy + 5); }
+            updateLunaUI();
+        }, 5000);
+
+        // --- ART CORNER LOGIC (PROCREATE-LITE + AR) ---
+        const canvas = document.getElementById('art-canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const video = document.getElementById('ar-video');
+        
+        let isDrawing = false;
+        let currentColor = '#ff69b4';
+        let brushType = 'normal'; // normal, neon, spray, erase
+        let strokes = []; // Undo history
+        let currentStroke = [];
+        let isARActive = false;
+
+        const colorInput = document.getElementById('brush-color');
+        const sizeInput = document.getElementById('brush-size');
+        const opacityInput = document.getElementById('brush-opacity');
+
+        colorInput.addEventListener('input', (e) => { currentColor = e.target.value; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected')); if(brushType === 'erase') setBrush('normal'); });
+        function quickColor(color) { currentColor = color; colorInput.value = color; document.querySelectorAll('.color-btn').forEach(b => { b.classList.toggle('selected', b.style.backgroundColor === color || (b.style.backgroundColor==='rgb(255, 255, 255)' && color==='#ffffff')); }); if(brushType === 'erase') setBrush('normal'); }
+
+        function setBrush(type) {
+            brushType = type;
+            document.querySelectorAll('.brush-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${type}`).classList.add('active');
+        }
+        
+        function resizeCanvas() {
+            const wrapper = canvas.parentElement;
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
+            tempCanvas.getContext('2d').drawImage(canvas, 0, 0);
+            canvas.width = wrapper.clientWidth; canvas.height = wrapper.clientHeight;
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Always keep transparent base!
+            ctx.drawImage(tempCanvas, 0, 0);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        setTimeout(resizeCanvas, 100);
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            if(e.touches && e.touches.length > 0) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+
+        function startDraw(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const pos = getPos(e);
+            currentStroke = [{...pos, color: currentColor, size: sizeInput.value, opacity: opacityInput.value, type: brushType}];
+            ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+            applyBrushSettings(currentStroke[0]);
+            if(brushType === 'spray') drawSpray(pos);
+        }
+
+        function applyBrushSettings(settings) {
+            ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+            ctx.lineWidth = settings.size; ctx.globalAlpha = settings.opacity;
+            
+            if (settings.type === 'erase') {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.shadowBlur = 0; ctx.strokeStyle = "rgba(0,0,0,1)";
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = settings.color; ctx.fillStyle = settings.color;
+                if (settings.type === 'neon') {
+                    ctx.shadowBlur = 15; ctx.shadowColor = settings.color;
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+            }
+        }
+
+        function drawSpray(pos) {
+            const radius = sizeInput.value * 2;
+            const density = 30;
+            for (let i = 0; i < density; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = Math.random() * radius;
+                ctx.fillRect(pos.x + r * Math.cos(angle), pos.y + r * Math.sin(angle), 1, 1);
+            }
+        }
+
+        function draw(e) {
+            e.preventDefault();
+            if (!isDrawing) return;
+            const pos = getPos(e);
+            currentStroke.push({...pos});
+            if(brushType === 'spray') {
+                drawSpray(pos);
+            } else {
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+            }
+        }
+
+        function stopDraw() { 
+            if(isDrawing) {
+                strokes.push(currentStroke); isDrawing = false; 
+                ctx.shadowBlur = 0; ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+            }
+        }
+
+        function redrawAll() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear to transparent
+            
+            strokes.forEach(stroke => {
+                if(stroke.length === 0) return;
+                applyBrushSettings(stroke[0]);
+                ctx.beginPath(); ctx.moveTo(stroke[0].x, stroke[0].y);
+                
+                for(let i=1; i<stroke.length; i++) {
+                    if(stroke[0].type === 'spray') drawSpray(stroke[i]);
+                    else { ctx.lineTo(stroke[i].x, stroke[i].y); ctx.stroke(); }
+                }
+            });
+            // Reset state
+            ctx.shadowBlur = 0; ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+        }
+
+        function undoStroke() { if(strokes.length > 0) { strokes.pop(); redrawAll(); } }
+        function clearCanvas() { strokes = []; ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDraw); canvas.addEventListener('mouseout', stopDraw);
+        canvas.addEventListener('touchstart', startDraw, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false});
+        canvas.addEventListener('touchend', stopDraw);
+
+        // --- PHYGITAL 3D LOGIC ---
+        let phygitalScene, phygitalCamera, phygitalRenderer, phygitalMesh, phygitalReq;
+        
+        function makePhygital() {
+            // Show modal
+            document.getElementById('phygital-modal').classList.remove('hidden');
+            
+            // Generate QR Code with current URL so you can open it on your phone
+            const currentUrl = encodeURIComponent(window.location.href);
+            document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${currentUrl}`;
+            
+            // Get canvas drawing
+            const dataUrl = canvas.toDataURL('image/png');
+            
+            // Initialize 3D Scene if not created
+            const container = document.getElementById('three-container');
+            if(!phygitalScene) {
+                phygitalScene = new THREE.Scene();
+                // Add soft cosmic background color
+                phygitalScene.background = new THREE.Color(0x1a0525);
+                
+                phygitalCamera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+                phygitalRenderer = new THREE.WebGLRenderer({antialias: true});
+                phygitalRenderer.setSize(container.clientWidth, container.clientHeight);
+                container.appendChild(phygitalRenderer.domElement);
+                
+                // Magical crystal shape (Octahedron)
+                const geometry = new THREE.OctahedronGeometry(12, 0); 
+                
+                // Lights
+                const light = new THREE.PointLight(0xffffff, 1.5, 100);
+                light.position.set(20, 20, 20);
+                phygitalScene.add(light);
+                
+                const ambient = new THREE.AmbientLight(0xffb6c1, 0.8);
+                phygitalScene.add(ambient);
+                
+                const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
+                phygitalMesh = new THREE.Mesh(geometry, material);
+                phygitalScene.add(phygitalMesh);
+                
+                phygitalCamera.position.z = 30;
+            }
+            
+            // Apply current drawing as texture
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load(dataUrl, (texture) => {
+                phygitalMesh.material.map = texture;
+                phygitalMesh.material.emissiveMap = texture;
+                phygitalMesh.material.emissive = new THREE.Color(0x884488);
+                phygitalMesh.material.needsUpdate = true;
+            });
+
+            // Start Animation Loop
+            function animate() {
+                phygitalReq = requestAnimationFrame(animate);
+                phygitalMesh.rotation.x += 0.005;
+                phygitalMesh.rotation.y += 0.01;
+                phygitalRenderer.render(phygitalScene, phygitalCamera);
+            }
+            cancelAnimationFrame(phygitalReq); // prevent duplicate loops
+            animate();
+        }
+
+        function closePhygital() {
+            document.getElementById('phygital-modal').classList.add('hidden');
+            cancelAnimationFrame(phygitalReq);
+        }
+
+        // --- SAVE ARTWORK ---
+        function saveArtwork() {
+            // Create a temporary canvas to composite the background + drawing
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
+            const tCtx = tempCanvas.getContext('2d');
+            
+            // Fill white background to ensure visibility of neon
+            tCtx.fillStyle = '#ffffff';
+            tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+            
+            // Draw artwork over it
+            tCtx.drawImage(canvas, 0, 0);
+
+            // Trigger download
+            const link = document.createElement('a');
+            link.download = 'moon-magic-artwork.png';
+            link.href = tempCanvas.toDataURL('image/png');
+            link.click();
+        }
+
     </script>
 </body>
 </html>
