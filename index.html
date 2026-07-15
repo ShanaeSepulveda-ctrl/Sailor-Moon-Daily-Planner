@@ -566,15 +566,6 @@
             "https://open.spotify.com/embed/album/3hzUq786dmch2KTVixU9Tb?utm_source=generator&si=2b196797add84c6b"
         ];
        
-        function changeRecord(index) {
-            const iframe = document.getElementById('spotify-iframe');
-            const record = document.getElementById('active-record');
-            record.classList.remove('spin');
-            setTimeout(() => {
-                iframe.src = playlists[index];
-                record.classList.add('spin');
-            }, 100);
-        }
             </div>
 
             <!-- 3D Luna-Gotchi -->
@@ -735,7 +726,7 @@
                 recordElement.classList.add('spin');
             }, 300);
         }
-
+                        
         function playMagicalSound(type) {
             if(!audioInitialized) return;
             if(type === 'play') {
