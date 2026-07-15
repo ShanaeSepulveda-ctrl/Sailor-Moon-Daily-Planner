@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌙 My Magical Y2K Sanctuary</title>
+    <title>My Magical Cosmic Sanctuary</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -13,171 +13,175 @@
         :root {
             --sm-pink: #ffb6c1;
             --sm-hotpink: #ff69b4;
+            --sm-blue: #191970;
+            --sm-yellow: #ffd700;
+            --sm-purple: #9370db;
             --cosmic-dark: #0f0c29;
             --cosmic-mid: #302b63;
+            --cosmic-light: #24243e;
         }
 
         body {
             margin: 0;
             font-family: 'Nunito', sans-serif;
-            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            background: linear-gradient(to bottom, var(--cosmic-dark), var(--cosmic-mid), var(--cosmic-light));
+            background-attachment: fixed;
             min-height: 100vh;
             color: #fff;
+            overflow-x: hidden;
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z" fill="%23FF69B4" stroke="%23FFF" stroke-width="1.5"/></svg>'), auto;
         }
 
+        button, a, input, .cursor-pointer, .cd-disk, canvas {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z" fill="%23FFD700" stroke="%23FFF" stroke-width="1.5"/></svg>'), pointer !important;
+        }
+
+        /* Twinkling Stars Background */
+        .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle infinite alternate; }
+        @keyframes twinkle { 0% { opacity: 0.2; box-shadow: 0 0 2px white; } 100% { opacity: 1; box-shadow: 0 0 8px var(--sm-hotpink), 0 0 15px white; } }
+
+        /* Fairy Dust Particles */
+        .fairy-dust {
+            position: fixed; pointer-events: none; width: 8px; height: 8px; background: white; border-radius: 50%;
+            box-shadow: 0 0 10px 2px #fff, 0 0 20px 5px var(--sm-yellow); z-index: 9999;
+            animation: fallAndFade 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        @keyframes fallAndFade { 0% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); } 100% { opacity: 0; transform: scale(0.2) translateY(50px) rotate(180deg); } }
+
         /* Pink Matrix Background */
-        #matrix-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; opacity: 0.3; pointer-events: none; }
+        #matrix-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; opacity: 0.35; pointer-events: none; }
 
-        /* The 3D-ish Tamagotchi Buttons */
-        .tama-btn {
-            background: linear-gradient(145deg, #ffffff, #e0e0e0);
-            border-radius: 50%;
-            width: 50px; height: 50px;
-            box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
-            transition: all 0.1s;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1.5rem;
-        }
-        .tama-btn:active { box-shadow: inset 3px 3px 6px #bebebe, inset -3px -3px 6px #ffffff; transform: scale(0.95); }
+        /* Fairy Lights */
+        .fairy-lights { position: absolute; top: 0; left: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; padding: 0; margin: 0; list-style: none; z-index: 0; pointer-events: none; }
+        .fairy-lights li { position: relative; width: 12px; height: 20px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #fff; animation: glow 2s infinite alternate; }
+        .fairy-lights li::before { content: ''; position: absolute; top: -5px; left: 4px; width: 4px; height: 5px; background: #333; border-radius: 2px; }
+        .fairy-lights li:nth-child(odd) { animation-duration: 1.5s; background: var(--sm-yellow); box-shadow: 0 0 15px 5px var(--sm-yellow); }
+        .fairy-lights li:nth-child(even) { animation-duration: 2.2s; background: #ffb6c1; box-shadow: 0 0 15px 5px #ffb6c1; }
+        .fairy-lights li:nth-child(3n) { animation-duration: 1.8s; background: #87ceeb; box-shadow: 0 0 15px 5px #87ceeb; }
+        @keyframes glow { 0% { opacity: 0.5; filter: brightness(1); } 100% { opacity: 1; filter: brightness(1.5); } }
 
-        /* Glossy Tamagotchi Shell */
-        .tamagotchi-3d {
-            background: radial-gradient(circle at 30% 30%, #ff99cc, #ff1493);
-            border-radius: 50px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.4);
-            border: 8px solid #ff69b4;
-        }
+        /* Posters */
+        .poster { position: absolute; background: white; padding: 10px 10px 30px 10px; box-shadow: 2px 5px 25px rgba(0,0,0,0.6); border-radius: 2px; z-index: 1; transition: transform 0.3s; }
+        .poster:hover { transform: scale(1.1) rotate(0deg) !important; z-index: 20; box-shadow: 0 10px 30px var(--sm-hotpink); }
+        .poster img { width: 120px; height: 120px; object-fit: cover; border: 1px solid #eee; }
+        .poster-caption { font-family: 'VT323', monospace; text-align: center; margin-top: 5px; font-size: 1.2rem; color: #333; }
+        .tape { position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-5deg); width: 40px; height: 15px; background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-        /* Phygital Modal */
-        .phygital-modal {
-            background: rgba(15, 12, 41, 0.95);
-            backdrop-filter: blur(20px);
-            border: 4px solid var(--sm-hotpink);
-            border-radius: 30px;
-        }
+        /* CD Player */
+        .cd-player-container { background: rgba(255, 105, 180, 0.2); backdrop-filter: blur(15px); border: 4px solid rgba(255, 182, 193, 0.5); border-radius: 40px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 30px rgba(255,255,255,0.4); position: relative; }
+        .cd-player-body { width: 260px; height: 260px; background: linear-gradient(135deg, #ffc0cb, #ff69b4); border-radius: 50%; margin: 0 auto 20px auto; border: 8px solid #ff1493; box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), 0 15px 25px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; position: relative; }
+        .cd-disk { width: 190px; height: 190px; border-radius: 50%; background: repeating-radial-gradient(#ddd, #ccc 2px, #fff 4px); display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.5s ease; }
+        .cd-disk.spin { animation: spinRecord 1.5s linear infinite; }
+        @keyframes spinRecord { 100% { transform: rotate(360deg); } }
 
-        /* TV Screen Effect */
-        .tv-screen-container { 
-            background: #111; border: 8px solid #333; 
-            box-shadow: inset 0 0 20px #000, 0 0 15px rgba(0,0,0,0.5); 
-            overflow: hidden;
-        }
-        .tv-screen-container::after {
-            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; 
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 3px, 3px 100%; pointer-events: none;
-        }
+        /* TV */
+        .retro-tv { background: rgba(147, 112, 219, 0.4); backdrop-filter: blur(12px); border-radius: 30px; padding: 20px; border: 2px solid rgba(255,255,255,0.5); box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: flex; gap: 15px; position: relative; }
+        .tv-screen-container { flex-grow: 1; background: #111; border-radius: 20px; border: 8px solid #222; position: relative; overflow: hidden; aspect-ratio: 16/9; }
+        
+        /* Tamagotchi */
+        .tamagotchi-3d { background: rgba(255, 105, 180, 0.3); backdrop-filter: blur(10px); border: 6px solid rgba(255,255,255,0.6); border-radius: 40% 40% 50% 50% / 55% 55% 45% 45%; padding: 35px 25px 25px 25px; }
+        .tama-screen { background: #8b9a46; border: 6px solid #222; border-radius: 20px; width: 100%; aspect-ratio: 1 / 1; font-family: 'Press Start 2P', monospace; }
+        .tama-btn { width: 40px; height: 35px; background: rgba(255,255,255,0.9); border-radius: 50% 50% 10% 10%; border: none; border-bottom: 6px solid #aaa; box-shadow: 0 5px 8px rgba(0,0,0,0.4); }
+        .tama-btn:active { transform: translateY(6px); }
+
+        .phygital-modal { background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(20px); border: 4px solid var(--sm-hotpink); border-radius: 30px; }
     </style>
 </head>
-<body class="py-10 px-4">
+<body class="py-10 px-4 md:px-8 relative">
 
     <canvas id="matrix-canvas"></canvas>
 
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start relative z-10">
         
-        <!-- LEFT: Luna & Art -->
+        <!-- COLUMN 1 -->
         <div class="flex flex-col gap-10">
-            <!-- Luna-Gotchi 3.0 -->
-            <div class="tamagotchi-3d max-w-[320px] mx-auto w-full">
-                <div class="tama-screen bg-[#8b9a46] border-4 border-black rounded-xl p-4 aspect-square mb-6 flex flex-col justify-between">
-                    <div class="text-black font-['Press_Start_2P'] text-[10px]">HP:<span id="luna-hp">♥♥♥</span></div>
-                    <div class="flex-1 flex items-center justify-center">
-                        <svg id="luna-sprite" viewBox="0 0 100 100" class="w-24 h-24">
-                            <ellipse cx="50" cy="55" rx="45" ry="38" fill="#111"/> 
-                            <path d="M50 25 A 6 6 0 1 1 49.9 25.1 A 7 7 0 1 0 50 25" fill="#8b9a46"/>
-                            <ellipse cx="28" cy="55" rx="9" ry="14" fill="#8b9a46"/><ellipse cx="72" cy="55" rx="9" ry="14" fill="#8b9a46"/>
-                            <path id="mouth" d="M45 76 Q50 82 55 76" stroke="#8b9a46" stroke-width="2" fill="none"/>
-                        </svg>
-                    </div>
-                    <div id="luna-status" class="text-black font-['Press_Start_2P'] text-[10px] text-center">HAPPY!</div>
+            <div class="cd-player-container max-w-[400px] mx-auto w-full">
+                <h2 class="text-center font-['Fredoka_One'] text-white text-2xl mb-4">💿 Moon CD Player</h2>
+                <div class="cd-player-body mx-auto">
+                    <div class="cd-disk spin" id="active-cd"></div>
                 </div>
                 <div class="flex justify-center gap-4">
-                    <button onclick="feedLuna()" class="tama-btn">🍙</button>
-                    <button onclick="playLuna()" class="tama-btn">✨</button>
-                    <button onclick="cleanLuna()" class="tama-btn">🧹</button>
-                    <button onclick="sleepLuna()" class="tama-btn">💤</button>
-                    <button onclick="quantumLuna()" class="tama-btn" style="background: pink;">🌌</button>
+                    <button onclick="changeCD(0)" class="w-12 h-12 bg-pink-300 rounded-full"></button>
+                    <button onclick="changeCD(1)" class="w-12 h-12 bg-blue-300 rounded-full"></button>
+                    <button onclick="changeCD(2)" class="w-12 h-12 bg-yellow-300 rounded-full"></button>
                 </div>
+                <iframe id="spotify-iframe" class="mt-4" src="https://open.spotify.com/embed/album/2IevUWpkZ9KUcr6ZhtklE0" width="100%" height="152" frameBorder="0"></iframe>
             </div>
 
-            <!-- Procreate Lite -->
-            <div class="bg-white/10 p-6 rounded-3xl border border-white/20 backdrop-blur-md">
-                <h2 class="text-xl font-['Fredoka_One'] mb-4">Cosmic Canvas 🎨</h2>
-                <div class="canvas-wrapper bg-white rounded-xl overflow-hidden mb-4 h-64 relative border-4 border-pink-400">
-                    <canvas id="art-canvas" class="w-full h-full cursor-crosshair"></canvas>
+            <div class="tamagotchi-3d max-w-[320px] mx-auto">
+                <div class="tama-screen p-4 flex flex-col items-center justify-center">
+                    <svg id="luna-sprite" viewBox="0 0 100 100" class="w-24 h-24">
+                        <ellipse cx="50" cy="55" rx="45" ry="38" fill="#111"/> 
+                        <path d="M50 25 A 6 6 0 1 1 49.9 25.1 A 7 7 0 1 0 50 25" fill="#8b9a46"/>
+                        <ellipse cx="28" cy="55" rx="9" ry="14" fill="#8b9a46"/>
+                        <ellipse cx="72" cy="55" rx="9" ry="14" fill="#8b9a46"/>
+                        <path id="mouth" d="M45 76 Q50 82 55 76" stroke="#8b9a46" stroke-width="2" fill="none"/>
+                    </svg>
                 </div>
-                <button onclick="makePhygital()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-full font-bold">Phygital 3D Portal 🌌</button>
+                <div class="flex justify-center gap-2 mt-4">
+                    <button onclick="feedLuna()" class="tama-btn">🍙</button>
+                    <button onclick="playLuna()" class="tama-btn">✨</button>
+                </div>
             </div>
         </div>
 
-        <!-- RIGHT: TV & Music -->
+        <!-- COLUMN 2 -->
         <div class="flex flex-col gap-10">
-            <!-- Retro TV -->
-            <div class="tv-screen-container relative rounded-3xl overflow-hidden aspect-video">
-                <iframe class="w-full h-full" src="https://www.youtube.com/embed/vCCamwjcumM" allowfullscreen></iframe>
-            </div>
-
-            <!-- CD Player -->
-            <div class="bg-pink-400/20 p-8 rounded-3xl border-4 border-pink-300">
-                <div class="cd-rack flex justify-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-full bg-pink-200 cursor-pointer" onclick="changeCD(0)"></div>
-                    <div class="w-12 h-12 rounded-full bg-blue-200 cursor-pointer" onclick="changeCD(1)"></div>
-                    <div class="w-12 h-12 rounded-full bg-yellow-200 cursor-pointer" onclick="changeCD(2)"></div>
+            <div class="retro-tv w-full max-w-[550px] mx-auto">
+                <div class="tv-screen-container">
+                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/vCCamwjcumM" allowfullscreen></iframe>
                 </div>
-                <iframe id="spotify-iframe" src="https://open.spotify.com/embed/playlist/0vvXsWCC9xrXsKd4Zsnsnis" width="100%" height="152" frameBorder="0" allow="encrypted-media"></iframe>
+            </div>
+            
+            <div class="sketchpad-container bg-white/90 p-6 rounded-3xl">
+                <h2 class="text-xl font-['Fredoka_One'] text-purple-600 mb-4">Cosmic Canvas 🎨</h2>
+                <canvas id="art-canvas" class="w-full h-64 border-4 border-pink-300 rounded-lg cursor-crosshair"></canvas>
+                <button onclick="makePhygital()" class="mt-4 w-full bg-pink-500 text-white font-bold p-3 rounded-full">Phygital Portal 🌌</button>
             </div>
         </div>
     </div>
 
     <!-- Phygital Modal -->
-    <div id="phygital-modal" class="phygital-modal hidden fixed top-10 left-10 right-10 bottom-10 z-50 p-10 flex flex-col items-center justify-center">
-        <h2 class="text-3xl font-bold mb-4">Your Portal to 3D Art</h2>
-        <div id="three-container" class="w-64 h-64 bg-black rounded-lg"></div>
-        <img id="qr-code" class="mt-4 w-40 h-40 bg-white p-2" src="" alt="QR">
-        <button onclick="closePhygital()" class="mt-6 bg-red-500 px-6 py-2 rounded-full">Close Portal</button>
+    <div id="phygital-modal" class="phygital-modal hidden fixed inset-0 z-50 flex items-center justify-center p-10">
+        <div class="bg-white p-8 rounded-3xl text-center text-black">
+            <h2 class="text-2xl font-bold mb-4">Scan the Portal!</h2>
+            <img id="qr-code" src="" class="w-48 h-48 mx-auto">
+            <button onclick="closePhygital()" class="mt-6 bg-pink-500 text-white px-6 py-2 rounded-full">Close</button>
+        </div>
     </div>
 
     <script>
         // Matrix Rain
         const mCanvas = document.getElementById('matrix-canvas');
-        const ctx = mCanvas.getContext('2d');
-        let width = mCanvas.width = window.innerWidth;
-        let height = mCanvas.height = window.innerHeight;
-        let drops = Array(Math.floor(width/20)).fill(1);
+        const mCtx = mCanvas.getContext('2d');
+        let drops = Array(Math.floor(window.innerWidth/20)).fill(1);
         setInterval(() => {
-            ctx.fillStyle = 'rgba(15, 12, 41, 0.05)';
-            ctx.fillRect(0,0,width,height);
-            ctx.fillStyle = '#ffb6c1';
+            mCtx.fillStyle = 'rgba(15, 12, 41, 0.1)';
+            mCtx.fillRect(0,0,window.innerWidth,window.innerHeight);
+            mCtx.fillStyle = '#ffb6c1';
             drops.forEach((d, i) => {
-                ctx.fillText('✧', i*20, d*20);
-                drops[i] = (d*20 > height && Math.random() > 0.975) ? 0 : d + 1;
+                mCtx.fillText('✧', i*20, d*20);
+                drops[i] = (d*20 > window.innerHeight && Math.random() > 0.95) ? 0 : d + 1;
             });
         }, 50);
 
-        // Art Canvas Logic
+        // Art Canvas
         const canvas = document.getElementById('art-canvas');
         const aCtx = canvas.getContext('2d');
         let drawing = false;
         canvas.onmousedown = () => drawing = true;
         canvas.onmouseup = () => drawing = false;
-        canvas.onmousemove = e => {
-            if(!drawing) return;
-            const rect = canvas.getBoundingClientRect();
-            aCtx.fillStyle = '#ff69b4';
-            aCtx.fillRect(e.clientX - rect.left, e.clientY - rect.top, 5, 5);
-        };
+        canvas.onmousemove = e => { if(!drawing) return; const r = canvas.getBoundingClientRect(); aCtx.fillStyle='#ff69b4'; aCtx.fillRect(e.clientX-r.left, e.clientY-r.top, 5, 5); };
 
-        // Phygital Engine placeholder
         function makePhygital() {
             document.getElementById('phygital-modal').classList.remove('hidden');
-            const url = encodeURIComponent(window.location.href);
-            document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?data=${url}`;
-            // (Three.js init would go here for the crystal)
+            document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}`;
         }
         function closePhygital() { document.getElementById('phygital-modal').classList.add('hidden'); }
         function changeCD(url) { document.getElementById('spotify-iframe').src = url; }
+        function feedLuna() { alert("Luna ate! 🍙"); }
+        function playLuna() { alert("Luna is happy! ✨"); }
     </script>
 </body>
 </html>
