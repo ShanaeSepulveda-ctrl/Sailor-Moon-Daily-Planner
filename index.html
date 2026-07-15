@@ -558,14 +558,9 @@
                 <p class="text-[10px] text-pink-600 text-center mb-2 font-bold opacity-80">(Use the widget below for actual Spotify playback!)</p>
 
                 <!-- Spotify Embed -->
-                    <script>
-        // Playlist logic
-        const playlists = [
-            "https://open.spotify.com/embed/album/2IevUWpkZ9KUcr6ZhtklE0?utm_source=generator&si=06243e0d201747c2",
-            "https://open.spotify.com/embed/playlist/5QiMvqbV1bZschvqV3tPs0?utm_source=generator&si=a97ee011156b4c95",
-            "https://open.spotify.com/embed/album/3hzUq786dmch2KTVixU9Tb?utm_source=generator&si=2b196797add84c6b"
-        ];
-       
+                <div class="w-full rounded-xl overflow-hidden shadow-lg border-2 border-pink-300">
+                    <iframe id="spotify-iframe" src="https://open.spotify.com/embed/playlist/0vvXsWCC9xrXsKd4Zsnsnis?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                </div>
             </div>
 
             <!-- 3D Luna-Gotchi -->
@@ -719,14 +714,11 @@
             
             // Swap the iframe URL
             setTimeout(() => {
-                spotifyIframe.src = '"https://open.spotify.com/embed/album/2IevUWpkZ9KUcr6ZhtklE0?utm_source=generator&si=06243e0d201747c2",
-            "https://open.spotify.com/embed/playlist/5QiMvqbV1bZschvqV3tPs0?utm_source=generator&si=a97ee011156b4c95",
-            "https://open.spotify.com/embed/album/3hzUq786dmch2KTVixU9Tb?utm_source=generator&si=2b196797add84c6b"'
-
+                spotifyIframe.src = `https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`;
                 recordElement.classList.add('spin');
             }, 300);
         }
-                        
+
         function playMagicalSound(type) {
             if(!audioInitialized) return;
             if(type === 'play') {
