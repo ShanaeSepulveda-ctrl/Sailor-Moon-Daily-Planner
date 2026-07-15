@@ -6,6 +6,7 @@
     <title>My Magical Cosmic Sanctuary</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     
     <style>
@@ -206,6 +207,14 @@
 
         @keyframes bounceLuna { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes sleepPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* Phygital Modal */
+        .phygital-modal {
+            background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 4px solid var(--sm-hotpink); border-radius: 30px; box-shadow: 0 0 50px var(--sm-hotpink);
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000;
+            width: 90%; max-width: 800px; padding: 30px; display: flex; flex-direction: column; align-items: center;
+        }
     </style>
 </head>
 <body class="py-10 px-4 md:px-8 relative">
@@ -294,6 +303,7 @@
                 <div class="tama-screen">
                     <div class="flex justify-between w-full pixel-text mt-1">
                         <span>HP:<span id="luna-hp">♥♥♥</span></span>
+                        <span>LVL:<span id="luna-lvl">1</span></span>
                         <span>EN:<span id="luna-en">⚡⚡</span></span>
                     </div>
                     
@@ -360,7 +370,7 @@
                 <div class="flex justify-between items-center mb-2">
                     <h2 class="font-['Fredoka_One'] text-xl text-purple-600 drop-shadow-sm">Cosmic Canvas 🎨</h2>
                     <div class="flex gap-2">
-                        <button onclick="toggleAR()" id="btn-ar" class="px-3 py-1 bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold rounded-full text-xs shadow-sm hover:scale-105 transition">AR Mode 📸</button>
+                        <button onclick="makePhygital()" id="btn-phygital" class="px-3 py-1 bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold rounded-full text-xs shadow-sm hover:scale-105 transition">Phygital 3D 🌌</button>
                         <button onclick="saveArtwork()" class="px-3 py-1 bg-pink-400 text-white font-bold rounded-full text-xs shadow-sm hover:scale-105 transition">Save 📥</button>
                     </div>
                 </div>
@@ -387,10 +397,8 @@
                     </div>
                 </div>
 
-                <!-- Drawing Canvas with AR Video Background -->
+                <!-- Drawing Canvas -->
                 <div class="canvas-wrapper">
-                    <!-- The video feed for AR mode -->
-                    <video id="ar-video" autoplay playsinline></video>
                     <!-- The drawing surface -->
                     <canvas id="art-canvas"></canvas>
                 </div>
@@ -403,6 +411,25 @@
 
         </div>
 
+    </div>
+
+    <!-- Phygital Modal -->
+    <div id="phygital-modal" class="phygital-modal hidden">
+        <h2 class="text-3xl font-['Fredoka_One'] text-white mb-2 tracking-wider drop-shadow-md text-center">✨ Your Phygital Artifact ✨</h2>
+        <p class="text-pink-200 mb-6 text-center font-bold">Scan the QR code with your phone to take this 3D model with you into the real world!</p>
+        
+        <div class="flex flex-col md:flex-row gap-8 items-center w-full justify-center">
+            <!-- 3D Viewer -->
+            <div id="three-container" class="w-64 h-64 border-4 border-pink-400 rounded-xl overflow-hidden bg-black shadow-inner"></div>
+            
+            <!-- QR Code -->
+            <div class="flex flex-col items-center bg-white p-4 rounded-xl shadow-lg border-4 border-purple-400">
+                <img id="qr-code" src="" alt="QR Code" class="w-40 h-40">
+                <p class="text-gray-800 font-bold mt-2 text-sm">Scan Me!</p>
+            </div>
+        </div>
+        
+        <button onclick="closePhygital()" class="mt-8 px-6 py-2 bg-pink-500 hover:bg-pink-400 text-white font-bold rounded-full text-lg shadow-lg border-2 border-white transition-all transform hover:scale-110">Close Magic</button>
     </div>
 
     <script>
@@ -519,7 +546,7 @@
         }
 
         // --- LUNA-GOTCHI LOGIC ---
-        let lunaStats = { hunger: 100, happiness: 100, energy: 100, hygiene: 100, isSleeping: false, isQuantum: false };
+        let lunaStats = { hunger: 100, happiness: 100, energy: 100, hygiene: 100, isSleeping: false, isQuantum: false, xp: 0, level: 1 };
         const mouthEl = document.getElementById('mouth');
         const spriteEl = document.getElementById('luna-sprite');
         const statusEl = document.getElementById('luna-status');
@@ -537,6 +564,7 @@
 
             document.getElementById('luna-hp').innerText = lunaStats.happiness > 60 ? '♥♥♥' : (lunaStats.happiness > 30 ? '♥♥' : '♥');
             document.getElementById('luna-en').innerText = lunaStats.energy > 50 ? '⚡⚡' : '⚡';
+            document.getElementById('luna-lvl').innerText = lunaStats.level;
 
             spriteEl.style.animation = 'none';
             spriteEl.style.filter = 'none';
@@ -573,10 +601,21 @@
             }
         }
 
-        function feedLuna() { if(lunaStats.isSleeping || lunaStats.isQuantum) return; playTamaBeep(); lunaStats.hunger = Math.min(100, lunaStats.hunger + 40); lunaStats.hygiene = Math.max(0, lunaStats.hygiene - 10); statusEl.innerText = "YUM!"; spriteEl.style.transform = "scale(1.1)"; setTimeout(() => { spriteEl.style.transform = "scale(1)"; updateLunaUI(); }, 500); }
-        function playLuna() { if(lunaStats.isSleeping || lunaStats.isQuantum) return; playTamaBeep(true); lunaStats.happiness = Math.min(100, lunaStats.happiness + 40); lunaStats.energy = Math.max(0, lunaStats.energy - 15); statusEl.innerText = "YAY!"; spriteEl.style.transform = "rotate(15deg)"; setTimeout(() => { spriteEl.style.transform = "rotate(-15deg)"; }, 200); setTimeout(() => { spriteEl.style.transform = "rotate(0deg)"; updateLunaUI(); }, 400); }
-        function cleanLuna() { if(lunaStats.isSleeping || lunaStats.isQuantum) return; playTamaBeep(true); lunaStats.hygiene = 100; statusEl.innerText = "CLEAN!"; updateLunaUI(); }
+        function feedLuna() { if(lunaStats.isSleeping || lunaStats.isQuantum) return; playTamaBeep(); lunaStats.hunger = Math.min(100, lunaStats.hunger + 40); lunaStats.hygiene = Math.max(0, lunaStats.hygiene - 10); lunaStats.xp += 10; checkLevel(); statusEl.innerText = "YUM!"; spriteEl.style.transform = "scale(1.1)"; setTimeout(() => { spriteEl.style.transform = "scale(1)"; updateLunaUI(); }, 500); }
+        function playLuna() { if(lunaStats.isSleeping || lunaStats.isQuantum) return; playTamaBeep(true); lunaStats.happiness = Math.min(100, lunaStats.happiness + 40); lunaStats.energy = Math.max(0, lunaStats.energy - 15); lunaStats.xp += 15; checkLevel(); statusEl.innerText = "YAY!"; spriteEl.style.transform = "rotate(15deg)"; setTimeout(() => { spriteEl.style.transform = "rotate(-15deg)"; }, 200); setTimeout(() => { spriteEl.style.transform = "rotate(0deg)"; updateLunaUI(); }, 400); }
+        function cleanLuna() { if(lunaStats.isSleeping || lunaStats.isQuantum) return; playTamaBeep(true); lunaStats.hygiene = 100; lunaStats.xp += 5; checkLevel(); statusEl.innerText = "CLEAN!"; updateLunaUI(); }
         function sleepLuna() { if(lunaStats.isQuantum) return; playTamaBeep(); lunaStats.isSleeping = !lunaStats.isSleeping; if(!lunaStats.isSleeping) lunaStats.energy = 100; updateLunaUI(); }
+
+        function checkLevel() {
+            if (lunaStats.xp >= 100) {
+                lunaStats.level += 1;
+                lunaStats.xp = 0;
+                statusEl.innerText = "LEVEL UP!";
+                if(audioInitialized) synth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "4n");
+                spriteEl.style.filter = "drop-shadow(0 0 20px #ffd700)";
+                setTimeout(() => { spriteEl.style.filter = "none"; }, 2000);
+            }
+        }
 
         function quantumLuna() {
             if(lunaStats.isSleeping) lunaStats.isSleeping = false;
@@ -731,29 +770,73 @@
         canvas.addEventListener('touchstart', startDraw, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false});
         canvas.addEventListener('touchend', stopDraw);
 
-        // --- AR CAMERA LOGIC ---
-        async function toggleAR() {
-            const btn = document.getElementById('btn-ar');
-            if (isARActive) {
-                // Turn off camera
-                const stream = video.srcObject;
-                if (stream) stream.getTracks().forEach(track => track.stop());
-                video.srcObject = null;
-                isARActive = false;
-                video.style.backgroundColor = "#fff"; // Back to solid white
-                btn.classList.remove('ring-4', 'ring-purple-400');
-            } else {
-                // Turn on camera
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                    video.srcObject = stream;
-                    isARActive = true;
-                    video.style.backgroundColor = "transparent"; // Show video feed
-                    btn.classList.add('ring-4', 'ring-purple-400');
-                } catch(err) {
-                    alert("AR Magic requires camera access! 💖 Check your browser permissions.");
-                }
+        // --- PHYGITAL 3D LOGIC ---
+        let phygitalScene, phygitalCamera, phygitalRenderer, phygitalMesh, phygitalReq;
+        
+        function makePhygital() {
+            // Show modal
+            document.getElementById('phygital-modal').classList.remove('hidden');
+            
+            // Generate QR Code with current URL so you can open it on your phone
+            const currentUrl = encodeURIComponent(window.location.href);
+            document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${currentUrl}`;
+            
+            // Get canvas drawing
+            const dataUrl = canvas.toDataURL('image/png');
+            
+            // Initialize 3D Scene if not created
+            const container = document.getElementById('three-container');
+            if(!phygitalScene) {
+                phygitalScene = new THREE.Scene();
+                // Add soft cosmic background color
+                phygitalScene.background = new THREE.Color(0x1a0525);
+                
+                phygitalCamera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+                phygitalRenderer = new THREE.WebGLRenderer({antialias: true});
+                phygitalRenderer.setSize(container.clientWidth, container.clientHeight);
+                container.appendChild(phygitalRenderer.domElement);
+                
+                // Magical crystal shape (Octahedron)
+                const geometry = new THREE.OctahedronGeometry(12, 0); 
+                
+                // Lights
+                const light = new THREE.PointLight(0xffffff, 1.5, 100);
+                light.position.set(20, 20, 20);
+                phygitalScene.add(light);
+                
+                const ambient = new THREE.AmbientLight(0xffb6c1, 0.8);
+                phygitalScene.add(ambient);
+                
+                const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
+                phygitalMesh = new THREE.Mesh(geometry, material);
+                phygitalScene.add(phygitalMesh);
+                
+                phygitalCamera.position.z = 30;
             }
+            
+            // Apply current drawing as texture
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load(dataUrl, (texture) => {
+                phygitalMesh.material.map = texture;
+                phygitalMesh.material.emissiveMap = texture;
+                phygitalMesh.material.emissive = new THREE.Color(0x884488);
+                phygitalMesh.material.needsUpdate = true;
+            });
+
+            // Start Animation Loop
+            function animate() {
+                phygitalReq = requestAnimationFrame(animate);
+                phygitalMesh.rotation.x += 0.005;
+                phygitalMesh.rotation.y += 0.01;
+                phygitalRenderer.render(phygitalScene, phygitalCamera);
+            }
+            cancelAnimationFrame(phygitalReq); // prevent duplicate loops
+            animate();
+        }
+
+        function closePhygital() {
+            document.getElementById('phygital-modal').classList.add('hidden');
+            cancelAnimationFrame(phygitalReq);
         }
 
         // --- SAVE ARTWORK ---
@@ -763,11 +846,10 @@
             tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
             const tCtx = tempCanvas.getContext('2d');
             
-            // Fill white background if AR is NOT active, otherwise keep it transparent
-            if(!isARActive) {
-                tCtx.fillStyle = '#ffffff';
-                tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-            }
+            // Fill white background to ensure visibility of neon
+            tCtx.fillStyle = '#ffffff';
+            tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+            
             // Draw artwork over it
             tCtx.drawImage(canvas, 0, 0);
 
