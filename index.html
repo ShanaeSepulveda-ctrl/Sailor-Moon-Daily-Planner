@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magical Daily Planner & Luna-gotchi</title>
+    <title>Magical Room & Y2K Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Added Press Start 2P for the retro Tamagotchi vibe! -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --sm-pink: #ffb6c1;
@@ -14,15 +15,15 @@
             --sm-blue: #191970;
             --sm-yellow: #ffd700;
             --sm-purple: #9370db;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.9);
+            --pda-silver: #e0e0e0;
+            --pda-pink: #f8c8d8;
         }
 
-        /* Magical Star Cursors! */
         body {
             margin: 0;
             font-family: 'Nunito', sans-serif;
-            background: linear-gradient(180deg, #191970 0%, #483d8b 30%, #ffafbd 70%, #ffc3a0 100%);
+            /* Magical room wall gradient */
+            background: linear-gradient(135deg, #2b1055 0%, #752273 50%, #ffb6c1 100%);
             min-height: 100vh;
             color: #4a4a4a;
             overflow-x: hidden;
@@ -30,272 +31,326 @@
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z" fill="%23FF69B4" stroke="%23FFF" stroke-width="1"/></svg>'), auto;
         }
 
-        /* Gold star cursor on hover */
-        button, a, input, .cursor-pointer, .vinyl, .star-checkbox {
+        button, a, input, .cursor-pointer, .vinyl-disk, .star-checkbox {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z" fill="%23FFD700" stroke="%23FFF" stroke-width="1"/></svg>'), pointer !important;
         }
 
-        .stars-overlay {
+        /* Fairy Dust Particles */
+        .fairy-dust {
             position: fixed;
+            pointer-events: none;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px #fff, 0 0 20px 5px var(--sm-hotpink);
+            z-index: 9999;
+            animation: fallAndFade 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes fallAndFade {
+            0% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+            100% { opacity: 0; transform: scale(0.2) translateY(50px) rotate(180deg); }
+        }
+
+        /* Fairy Lights */
+        .fairy-lights {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 80px 120px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 150px 70px, #ffd700, rgba(0,0,0,0)),
-                radial-gradient(4px 4px at 220px 220px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 350px 50px, #ffb6c1, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 50% 50%, #fff, rgba(0,0,0,0));
-            background-repeat: repeat;
-            background-size: 400px 400px;
-            opacity: 0.7;
-            animation: twinkle 4s infinite alternate;
+            height: 60px;
+            display: flex;
+            justify-content: space-around;
+            padding: 0;
+            margin: 0;
+            list-style: none;
             z-index: 0;
+            pointer-events: none;
         }
 
-        @keyframes twinkle {
-            0% { opacity: 0.4; transform: scale(0.98); }
-            100% { opacity: 0.9; transform: scale(1.02); }
-        }
-
-        .retro-player-card {
-            background: rgba(255, 182, 193, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 4px solid var(--glass-border);
-            box-shadow: 0 15px 35px rgba(25, 25, 112, 0.3), inset 0 0 20px rgba(255,255,255,0.5);
-            border-radius: 32px;
-            width: 100%;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .fairy-lights li {
             position: relative;
+            width: 12px;
+            height: 20px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            background: #fff;
+            animation: glow 2s infinite alternate;
         }
-
-        .player-title {
-            font-family: 'Fredoka One', cursive;
-            color: white;
-            text-shadow: 2px 2px 0px var(--sm-hotpink);
-            font-size: 1.5rem;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .turntable {
-            width: 100%;
-            max-width: 260px;
-            aspect-ratio: 1 / 1;
-            background: #fff0f5;
-            border-radius: 20px;
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.1), 0 4px 0 rgba(255,255,255,0.8);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 24px;
-            border: 2px solid #ffd700;
-        }
-
-        .vinyl {
-            width: 85%;
-            height: 85%;
-            background: radial-gradient(circle, #333 30%, #111 70%, #222 100%);
-            border-radius: 50%;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.8);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            border: 4px solid #444;
-        }
-
-        .vinyl::before {
+        
+        .fairy-lights li::before {
             content: '';
             position: absolute;
-            width: 90%;
-            height: 90%;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: inset 0 0 0 10px rgba(0,0,0,0.2), inset 0 0 0 20px rgba(255,255,255,0.05);
+            top: -5px;
+            left: 4px;
+            width: 4px;
+            height: 5px;
+            background: #333;
+            border-radius: 2px;
         }
 
-        .vinyl-label {
-            width: 30%;
-            height: 30%;
-            background: var(--sm-pink);
+        .fairy-lights li:nth-child(odd) { animation-duration: 1.5s; background: var(--sm-yellow); box-shadow: 0 0 15px 5px var(--sm-yellow); }
+        .fairy-lights li:nth-child(even) { animation-duration: 2.2s; background: #ffb6c1; box-shadow: 0 0 15px 5px #ffb6c1; }
+        .fairy-lights li:nth-child(3n) { animation-duration: 1.8s; background: #87ceeb; box-shadow: 0 0 15px 5px #87ceeb; }
+
+        @keyframes glow {
+            0% { opacity: 0.5; filter: brightness(1); }
+            100% { opacity: 1; filter: brightness(1.5); }
+        }
+
+        /* Polaroids / Posters on the Wall */
+        .poster {
+            position: absolute;
+            background: white;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 2px 5px 15px rgba(0,0,0,0.4);
+            border-radius: 2px;
+            z-index: 1;
+            transition: transform 0.3s;
+        }
+        .poster:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 20;
+        }
+        .poster img { width: 120px; height: 120px; object-fit: cover; border: 1px solid #eee; }
+        .poster-caption { font-family: 'VT323', monospace; text-align: center; margin-top: 5px; font-size: 1.2rem; color: #333; }
+        .tape {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-5deg);
+            width: 40px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* 3D Record Player */
+        .record-player-3d {
+            background: linear-gradient(145deg, #ffe4e1, #ffb6c1);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 
+                10px 10px 20px rgba(0,0,0,0.3), 
+                -5px -5px 15px rgba(255,255,255,0.6),
+                inset 2px 2px 5px rgba(255,255,255,0.8),
+                inset -2px -2px 5px rgba(0,0,0,0.1);
+            border: 3px solid #ff69b4;
+            position: relative;
+        }
+
+        .platter-3d {
+            width: 220px;
+            height: 220px;
+            background: #ddd;
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            position: relative;
+            box-shadow: 
+                inset 5px 5px 15px rgba(0,0,0,0.2),
+                inset -5px -5px 15px rgba(255,255,255,0.9),
+                0 10px 15px rgba(0,0,0,0.4);
+            border: 5px solid #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Give it a slight tilt */
+            transform: perspective(600px) rotateX(15deg);
+            transform-style: preserve-3d;
+        }
+
+        .active-record {
+            width: 90%;
+            height: 90%;
+            background: repeating-radial-gradient(#111, #111 4px, #222 5px, #222 6px);
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s ease;
+            transform: translateZ(10px);
+        }
+
+        .active-record.spin {
+            animation: spinRecord 2s linear infinite;
+        }
+
+        .record-label {
+            width: 35%;
+            height: 35%;
+            background: var(--sm-hotpink);
             border-radius: 50%;
             border: 2px solid var(--sm-yellow);
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 1.5rem;
-            box-shadow: inset 0 0 10px rgba(255,105,180,0.5);
-            z-index: 2;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
         }
-
-        .vinyl-label::after {
+        .record-label::after {
             content: '';
-            position: absolute;
             width: 15%;
             height: 15%;
             background: #fff;
             border-radius: 50%;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
         }
 
-        @keyframes spinRecord {
-            100% { transform: rotate(360deg); }
-        }
-
-        .playing .vinyl {
-            animation: spinRecord 3s linear infinite;
-        }
-
-        .tonearm {
-            position: absolute;
-            top: 8%;
-            right: 8%;
-            width: 10%;
-            height: 45%;
-            transform-origin: top center;
-            transform: rotate(-25deg);
-            transition: transform 0.5s ease-in-out;
-            z-index: 5;
-        }
-
-        .playing .tonearm {
-            transform: rotate(15deg);
-        }
-
-        .tonearm-base {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            background: #ccc;
-            border-radius: 50%;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .tonearm-rod {
-            width: 30%;
-            height: 90%;
-            background: linear-gradient(to right, #ddd, #fff, #aaa);
-            position: absolute;
-            top: 50%;
-            left: 35%;
-            border-radius: 4px;
-        }
-
-        .tonearm-head {
-            width: 60%;
-            height: 20%;
-            background: #444;
-            position: absolute;
-            bottom: -5%;
-            left: 20%;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .spotify-wrapper {
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .tamagotchi-card {
-            background: linear-gradient(135deg, #ff69b4, #ff1493);
-            border: 6px solid #fff;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.4);
-            border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%; /* Egg shape! */
-            padding: 30px 20px;
-            position: relative;
+        /* Record Rack */
+        .record-rack {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .tamagotchi-keychain {
-            position: absolute;
-            top: -20px;
-            width: 30px;
-            height: 30px;
-            border: 5px solid silver;
-            border-radius: 50%;
-            z-index: 0;
-        }
-
-        .tamagotchi-screen {
-            background: #9bbc0f; /* Classic Gameboy/Tamagotchi LCD green */
-            border: 4px solid #333;
-            border-radius: 20px;
-            width: 100%;
-            aspect-ratio: 1.1 / 1;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-            font-family: 'Press Start 2P', monospace;
-            color: #113811;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
             padding: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .pixel-text {
-            font-size: 8px;
-            text-shadow: 1px 1px 0px rgba(155, 188, 15, 0.5);
+        .vinyl-disk {
+            width: 50px;
+            height: 50px;
+            background: #111;
+            border-radius: 50%;
+            border: 2px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+        .vinyl-disk:hover {
+            transform: translateY(-10px) scale(1.1);
+            box-shadow: 0 10px 10px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        .vinyl-disk::before {
+            content: '';
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .disk-1::before { background: #ff69b4; }
+        .disk-2::before { background: #87ceeb; }
+        .disk-3::before { background: #ffd700; }
+
+        /* Magical Audio Controls */
+        .magical-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .magical-btn {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #fff, #ffd700);
+            border-radius: 50%;
+            border: 2px solid #ffaa00;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 2px 2px 4px rgba(255,255,255,1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            color: #d2691e;
+            transition: all 0.1s;
+        }
+        .magical-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 2px rgba(0,0,0,0.2), inset 2px 2px 4px rgba(255,255,255,1);
         }
 
-        .planner-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 3px solid var(--glass-border);
-            box-shadow: 0 15px 35px rgba(25, 25, 112, 0.2);
-            border-radius: 32px;
+        /* Y2K PDA / Blackberry Planner */
+        .y2k-pda {
+            background: linear-gradient(145deg, var(--pda-silver), #ffffff);
+            border-radius: 40px;
+            padding: 20px 15px 30px 15px;
+            box-shadow: 
+                20px 20px 40px rgba(0,0,0,0.5),
+                -10px -10px 20px rgba(255,255,255,0.2),
+                inset 5px 5px 15px rgba(255,255,255,1),
+                inset -5px -5px 15px rgba(0,0,0,0.1);
+            border: 4px solid #b0b0b0;
             width: 100%;
-            overflow: hidden;
             position: relative;
             display: flex;
             flex-direction: column;
-            min-height: 650px;
+            min-height: 750px;
         }
 
-        .ribbon-top {
+        .pda-speaker {
+            width: 60px;
+            height: 8px;
+            background: #888;
+            border-radius: 10px;
+            margin: 0 auto 15px auto;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 1px 1px rgba(255,255,255,0.8);
+        }
+
+        .pda-camera {
             position: absolute;
-            top: -15px;
+            top: 20px;
             right: 30px;
-            font-size: 3.5rem;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
-            z-index: 20;
-            transform: rotate(15deg);
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, #222, #000);
+            border-radius: 50%;
+            border: 2px solid #aaa;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
         }
 
+        .pda-screen {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 4px solid #888;
+            border-radius: 20px;
+            flex-1;
+            padding: 15px;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pda-home-btn {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #ddd, #aaa);
+            border-radius: 50%;
+            margin: 20px auto 0 auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 0 -2px 4px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.8);
+            border: 2px solid #888;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #555;
+            font-size: 1.5rem;
+        }
+        .pda-home-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        /* Planner Content Styles */
         .title-font {
             font-family: 'Fredoka One', cursive;
-            background: linear-gradient(45deg, var(--sm-blue), var(--sm-purple), var(--sm-hotpink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--sm-blue);
+            text-shadow: 2px 2px 0px var(--sm-pink);
             letter-spacing: 1px;
         }
 
         .moon-wand-container {
-            height: 18px;
-            background: rgba(255, 255, 255, 0.9);
+            height: 20px;
+            background: #eee;
             border-radius: 20px;
             overflow: hidden;
-            border: 2px solid var(--sm-yellow);
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            border: 2px solid #ccc;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
             position: relative;
         }
 
@@ -305,40 +360,35 @@
             width: 0%;
             transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
         }
 
         .task-item {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid rgba(255,255,255,0.6);
-            background: rgba(255, 255, 255, 0.8);
+            background: #fff;
+            border: 2px solid #ffe4e1;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         
         .task-item:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(255, 105, 180, 0.2);
             border-color: var(--sm-pink);
-            background: rgba(255, 255, 255, 0.98);
         }
 
         .task-item.completed {
-            opacity: 0.65;
-            background: rgba(240, 240, 245, 0.6);
+            opacity: 0.6;
+            background: #f5f5f5;
             border-color: transparent;
-            transform: scale(0.98);
         }
-
-        .task-item.completed .task-title {
-            text-decoration: line-through;
-            color: #888;
-        }
+        .task-item.completed .task-title { text-decoration: line-through; color: #888; }
 
         .star-checkbox {
             appearance: none;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             background-color: #fff;
-            border: 3px solid var(--sm-pink);
+            border: 3px solid #ccc;
             border-radius: 50%;
             position: relative;
             outline: none;
@@ -353,289 +403,394 @@
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             animation: pop 0.4s ease-out;
         }
-
         .star-checkbox:checked::after {
             content: '⭐';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 18px;
+            font-size: 16px;
         }
 
-        .badge-high { background: var(--sm-hotpink); color: white; box-shadow: 0 2px 5px rgba(255,105,180,0.4); }
-        .badge-medium { background: var(--sm-purple); color: white; box-shadow: 0 2px 5px rgba(147,112,219,0.4); }
-        .badge-low { background: #87ceeb; color: white; box-shadow: 0 2px 5px rgba(135,206,235,0.4); }
+        /* 3D Tamagotchi Card */
+        .tamagotchi-3d {
+            background: radial-gradient(ellipse at top left, #ff99cc, #ff1493);
+            border: 8px solid #ff69b4;
+            box-shadow: 
+                15px 15px 30px rgba(0,0,0,0.4), 
+                inset 10px 10px 20px rgba(255,255,255,0.7),
+                inset -10px -10px 20px rgba(0,0,0,0.2);
+            border-radius: 40% 40% 50% 50% / 55% 55% 45% 45%;
+            padding: 35px 25px 25px 25px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-        .filter-btn {
-            transition: all 0.2s ease;
-            background: rgba(255,255,255,0.7);
-            color: var(--sm-blue);
-            border: 2px solid transparent;
+        .tama-chain {
+            position: absolute;
+            top: -25px;
+            width: 40px;
+            height: 40px;
+            border: 6px solid #d3d3d3;
+            border-radius: 50%;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3), inset 0 2px 5px rgba(255,255,255,0.8);
+            z-index: -1;
         }
-        .filter-btn:hover {
-            background: rgba(255,255,255,1);
-            border-color: var(--sm-pink);
+
+        .tama-screen {
+            background: #8b9a46; /* Deeper classic LCD green */
+            border: 6px solid #444;
+            border-radius: 20px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            box-shadow: 
+                inset 5px 5px 15px rgba(0,0,0,0.6),
+                0 2px 4px rgba(255,255,255,0.5);
+            font-family: 'Press Start 2P', monospace;
+            color: #111;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+            position: relative;
+            overflow: hidden;
         }
-        .filter-btn.active {
-            background: var(--sm-pink);
-            color: white;
-            font-weight: 800;
-            border-color: var(--sm-hotpink);
-            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
+        
+        /* LCD Pixel Grid Overlay */
+        .tama-screen::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 4px 4px;
+            pointer-events: none;
         }
+
+        .tama-btn {
+            width: 45px;
+            height: 35px;
+            background: #fff;
+            border-radius: 50% 50% 10% 10%;
+            border: none;
+            border-bottom: 6px solid #ccc;
+            box-shadow: 0 5px 8px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.8);
+            font-size: 1.2rem;
+            transition: all 0.1s;
+        }
+        .tama-btn:active {
+            transform: translateY(6px);
+            border-bottom: 0px solid #ccc;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.8);
+        }
+
+        .pixel-text { font-size: 9px; z-index: 10; position: relative; }
+        
+        @keyframes bounceLuna {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes sleepPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
     </style>
 </head>
-<body class="py-10 px-4 md:px-8">
+<body class="py-10 px-4 md:px-8 relative">
 
-    <div class="stars-overlay"></div>
+    <!-- Magical Environment -->
+    <ul class="fairy-lights">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
 
-    <!-- Mobile-first: stacks in a column. Desktop: side-by-side flex layout -->
-    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 items-start justify-center relative z-10">
+    <!-- Room Posters (Polaroids) -->
+    <div class="hidden lg:block">
+        <div class="poster" style="top: 15%; left: 3%; transform: rotate(-8deg);">
+            <div class="tape"></div>
+            <img src="https://placehold.co/150x150/ffb6c1/ffffff?text=BFFs+4Ever" alt="Friends">
+            <div class="poster-caption">Squad ✨</div>
+        </div>
+        <div class="poster" style="top: 45%; left: 6%; transform: rotate(5deg);">
+            <div class="tape"></div>
+            <img src="https://placehold.co/150x150/87ceeb/ffffff?text=Tuxedo+Mask" alt="Crush">
+            <div class="poster-caption">T.M. 🌹</div>
+        </div>
+        <div class="poster" style="top: 20%; right: 4%; transform: rotate(6deg);">
+            <div class="tape"></div>
+            <img src="https://placehold.co/150x150/9370db/ffffff?text=Tokyo+Vibes" alt="Tokyo">
+            <div class="poster-caption">Goals 🗼</div>
+        </div>
+    </div>
+
+    <!-- Main Content Flex -->
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-10 items-start justify-center relative z-10 mt-8">
         
-        <!-- LEFT COLUMN: Music and Tamagotchi -->
-        <div class="flex flex-col gap-8 w-full lg:w-1/3">
+        <!-- LEFT COLUMN: The "Desk" (Music and Toys) -->
+        <div class="flex flex-col gap-10 w-full lg:w-1/3 z-20">
             
-            <!-- Music Player -->
-            <div class="retro-player-card">
-                <h2 class="player-title">🎶 Moon Melody</h2>
-                <p class="text-sm text-pink-700 font-bold mb-4 text-center">Click the record to spin!</p>
+            <!-- 3D Record Player -->
+            <div class="record-player-3d">
+                <h2 class="text-center font-['Fredoka_One'] text-white text-2xl mb-4 drop-shadow-md tracking-wider">🎶 Moon Melody</h2>
                 
-                <div class="turntable" id="turntable" onclick="toggleSpin()">
-                    <div class="tonearm">
-                        <div class="tonearm-base"></div>
-                        <div class="tonearm-rod"></div>
-                        <div class="tonearm-head"></div>
-                    </div>
-                    <div class="vinyl">
-                        <div class="vinyl-label">🌙</div>
+                <!-- Record Rack to choose music -->
+                <div class="record-rack" title="Pick a record to play!">
+                    <div class="vinyl-disk disk-1" onclick="changeRecord('0vvXsWCC9xrXsKd4Zsnsnis')"></div>
+                    <div class="vinyl-disk disk-2" onclick="changeRecord('37i9dQZF1DX8Uebhn9wzrS')"></div>
+                    <div class="vinyl-disk disk-3" onclick="changeRecord('37i9dQZF1DWWQRwui0ExPn')"></div>
+                </div>
+
+                <div class="platter-3d" id="turntable">
+                    <div class="active-record" id="active-record">
+                        <div class="record-label" id="record-label">🌙</div>
                     </div>
                 </div>
 
+                <!-- Magical Controls -->
+                <div class="magical-controls" title="Magical Audio Panel!">
+                    <button class="magical-btn" onclick="playMagicalSound('prev')">⭐</button>
+                    <button class="magical-btn" onclick="playMagicalSound('play')">⏯</button>
+                    <button class="magical-btn" onclick="playMagicalSound('next')">⭐</button>
+                </div>
+                <p class="text-[10px] text-pink-600 text-center mb-2 font-bold opacity-80">(Use the widget below for actual Spotify playback!)</p>
+
                 <!-- Spotify Embed -->
-                <!-- Note: If Spotify shows "Page Not Found", it means the specific playlist ID got deleted or made private. 
-                     I've updated this to a highly reliable Lofi Beats playlist! Replace the src URL with your own if desired. -->
-                <div class="spotify-wrapper">
-                    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0vvXsWCC9xrXsKd4Zsnsnis?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <div class="w-full rounded-xl overflow-hidden shadow-lg border-2 border-pink-300">
+                    <iframe id="spotify-iframe" src="https://open.spotify.com/embed/playlist/0vvXsWCC9xrXsKd4Zsnsnis?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                 </div>
             </div>
 
-            <!-- Luna Tamagotchi! -->
-            <div class="tamagotchi-card w-full">
-                <div class="tamagotchi-keychain"></div>
-                <h3 class="text-white font-['Fredoka_One'] text-xl mb-3 tracking-widest drop-shadow-md z-10 mt-2">LUNA-GOTCHI</h3>
+            <!-- 3D Luna-Gotchi -->
+            <div class="tamagotchi-3d w-full max-w-[320px] mx-auto">
+                <div class="tama-chain"></div>
+                <h3 class="text-white font-['Fredoka_One'] text-xl mb-4 tracking-widest drop-shadow-md z-10">LUNA-GOTCHI</h3>
                 
-                <div class="tamagotchi-screen">
+                <div class="tama-screen">
                     <div class="flex justify-between w-full pixel-text mt-1">
-                        <span>HP:<span id="luna-hp" class="text-red-800">♡♡♡</span></span>
-                        <span>EN:<span id="luna-en" class="text-yellow-700">⚡⚡</span></span>
+                        <span>HP:<span id="luna-hp">♥♥♥</span></span>
+                        <span>EN:<span id="luna-en">⚡⚡</span></span>
                     </div>
                     
-                    <!-- SVG Luna -->
-                    <div class="flex-1 flex items-center justify-center">
-                        <svg id="luna-sprite" viewBox="0 0 100 100" class="w-24 h-24 transition-transform duration-300">
-                            <!-- Body/Head -->
-                            <path d="M15 45 L5 10 L40 30 Z" fill="#113811"/> <!-- Left Ear -->
-                            <path d="M85 45 L95 10 L60 30 Z" fill="#113811"/> <!-- Right Ear -->
-                            <ellipse cx="50" cy="55" rx="40" ry="35" fill="#113811"/> <!-- Head -->
-                            <!-- Crescent Moon -->
-                            <path d="M50 25 A 5 5 0 1 1 49.9 25.1 A 6 6 0 1 0 50 25" fill="#9bbc0f" stroke="#9bbc0f" stroke-width="1"/>
-                            <!-- Eyes -->
-                            <ellipse id="eye-left" cx="30" cy="55" rx="6" ry="8" fill="#9bbc0f"/>
-                            <ellipse id="eye-right" cx="70" cy="55" rx="6" ry="8" fill="#9bbc0f"/>
-                            <circle cx="30" cy="55" r="2" fill="#113811"/>
-                            <circle cx="70" cy="55" r="2" fill="#113811"/>
+                    <!-- Cuter SVG Luna -->
+                    <div class="flex-1 flex items-center justify-center z-10 relative">
+                        <svg id="luna-sprite" viewBox="0 0 100 100" class="w-28 h-28">
+                            <!-- Ears -->
+                            <path d="M20 40 L5 5 L45 25 Z" fill="#111"/> 
+                            <path d="M80 40 L95 5 L55 25 Z" fill="#111"/> 
+                            <!-- Head -->
+                            <ellipse cx="50" cy="55" rx="45" ry="38" fill="#111"/> 
+                            <!-- Moon -->
+                            <path d="M50 25 A 6 6 0 1 1 49.9 25.1 A 7 7 0 1 0 50 25" fill="#8b9a46" stroke="#8b9a46" stroke-width="1"/>
+                            <!-- Big Anime Eyes -->
+                            <ellipse id="eye-left" cx="28" cy="55" rx="9" ry="14" fill="#8b9a46"/>
+                            <ellipse id="eye-right" cx="72" cy="55" rx="9" ry="14" fill="#8b9a46"/>
+                            <!-- Pupils -->
+                            <ellipse id="pupil-l" cx="30" cy="52" rx="4" ry="7" fill="#111"/>
+                            <ellipse id="pupil-r" cx="70" cy="52" rx="4" ry="7" fill="#111"/>
                             <!-- Nose/Mouth -->
-                            <path d="M48 70 Q50 72 52 70" stroke="#9bbc0f" stroke-width="2" fill="none"/>
-                            <path id="mouth" d="M45 74 Q50 78 55 74" stroke="#9bbc0f" stroke-width="2" fill="none"/>
+                            <path d="M48 72 L50 74 L52 72" stroke="#8b9a46" stroke-width="2" fill="none"/>
+                            <path id="mouth" d="M45 76 Q50 82 55 76" stroke="#8b9a46" stroke-width="2" fill="none"/>
                         </svg>
+                        
+                        <!-- Zzzs for sleep -->
+                        <div id="luna-zzzs" class="absolute top-0 right-4 text-xs font-['Press_Start_2P'] hidden">Zzz</div>
                     </div>
 
-                    <div id="luna-status" class="pixel-text text-center mb-1 animate-pulse">HAPPY!</div>
+                    <div id="luna-status" class="pixel-text text-center mb-1">HAPPY!</div>
                 </div>
 
-                <div class="flex justify-center gap-6 mt-6 w-full px-4">
-                    <button onclick="feedLuna()" class="w-12 h-12 bg-white rounded-full border-b-4 border-gray-300 shadow-md hover:bg-pink-100 active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center text-2xl" title="Feed Luna">🐟</button>
-                    <button onclick="playLuna()" class="w-12 h-12 bg-white rounded-full border-b-4 border-gray-300 shadow-md hover:bg-pink-100 active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center text-2xl" title="Play with Luna">🧶</button>
-                    <button onclick="sleepLuna()" class="w-12 h-12 bg-white rounded-full border-b-4 border-gray-300 shadow-md hover:bg-pink-100 active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center text-2xl" title="Put to Sleep">💤</button>
+                <div class="flex justify-between gap-4 mt-6 w-full px-2 z-10">
+                    <button onclick="feedLuna()" class="tama-btn" title="Feed">🍙</button>
+                    <button onclick="playLuna()" class="tama-btn" title="Play">✨</button>
+                    <button onclick="sleepLuna()" class="tama-btn" title="Sleep">💤</button>
                 </div>
             </div>
 
         </div>
 
-        <!-- RIGHT COLUMN: Planner -->
-        <div class="planner-card w-full lg:w-2/3">
-            <div class="ribbon-top">🎀</div>
+        <!-- RIGHT COLUMN: Y2K PDA Planner -->
+        <div class="y2k-pda w-full lg:w-2/3 z-20">
+            <div class="pda-speaker"></div>
+            <div class="pda-camera"></div>
             
-            <!-- Header -->
-            <div class="p-6 border-b border-white/50 bg-white/50 text-center relative z-10">
-                <h1 class="title-font text-3xl md:text-4xl mb-2 flex items-center justify-center gap-3">
-                    <span>🌙</span> Usagi's Missions <span>✨</span>
-                </h1>
-                <p class="text-sm font-bold text-indigo-900 tracking-wide uppercase mt-2">Tuesday, July 14, 2026</p>
+            <div class="pda-screen">
+                <!-- Header -->
+                <div class="text-center pb-4 border-b-2 border-dashed border-gray-300">
+                    <h1 class="title-font text-3xl md:text-4xl mb-2 flex items-center justify-center gap-3">
+                        🌙 Usagi's Missions ✨
+                    </h1>
+                    <p class="text-xs font-bold text-gray-500 tracking-widest uppercase mt-2">Tuesday, July 14, 2026</p>
+                    
+                    <div class="mt-4 px-2">
+                        <div class="flex justify-between text-[10px] font-black text-pink-500 mb-1 uppercase tracking-widest">
+                            <span>Moon Healing Power</span>
+                            <span id="progress-text">0%</span>
+                        </div>
+                        <div class="moon-wand-container">
+                            <div class="moon-wand-bar" id="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="py-3 flex gap-2 overflow-x-auto whitespace-nowrap">
+                    <button class="px-3 py-1.5 rounded-full text-xs font-bold bg-pink-100 text-pink-800 border-2 border-pink-300" onclick="setFilter('All')">🌟 All Magic</button>
+                    <button class="px-3 py-1.5 rounded-full text-xs font-bold bg-gray-100 text-gray-600 border-2 border-gray-300" onclick="setFilter('High')">💖 Critical</button>
+                </div>
+
+                <!-- Task List -->
+                <div class="flex-1 overflow-y-auto py-2 space-y-3" id="task-list">
+                    <!-- Tasks injected via JS -->
+                </div>
                 
-                <div class="mt-6 px-2">
-                    <div class="flex justify-between text-xs font-black text-pink-600 mb-2 uppercase tracking-widest drop-shadow-sm">
-                        <span>Moon Healing Power</span>
-                        <span id="progress-text">0%</span>
-                    </div>
-                    <div class="moon-wand-container">
-                        <div class="moon-wand-bar" id="progress-bar"></div>
-                    </div>
+                <!-- Footer -->
+                <div class="pt-4 mt-auto text-center border-t-2 border-dashed border-gray-300 text-xs font-bold text-gray-400">
+                    "In the name of the Moon, you will conquer today!" 🐈‍⬛🌙
                 </div>
             </div>
 
-            <!-- Filters -->
-            <div class="px-6 py-4 flex gap-3 overflow-x-auto border-b border-white/50 bg-white/30 whitespace-nowrap">
-                <button class="filter-btn active px-4 py-2 rounded-full text-sm font-bold shadow-sm flex-shrink-0" data-filter="All">🌟 All Magic</button>
-                <button class="filter-btn px-4 py-2 rounded-full text-sm font-bold shadow-sm flex-shrink-0" data-filter="High">💖 Critical</button>
-                <button class="filter-btn px-4 py-2 rounded-full text-sm font-bold shadow-sm flex-shrink-0" data-filter="Medium">🔮 Important</button>
-            </div>
-
-            <!-- Task List -->
-            <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4" id="task-list">
-                <!-- Tasks injected via JS -->
-            </div>
-            
-            <!-- Footer -->
-            <div class="p-4 bg-white/60 text-center border-t border-white/50 text-sm font-bold text-indigo-900">
-                "In the name of the Moon, you will conquer today!" 🐈‍⬛🌙
-            </div>
+            <div class="pda-home-btn" title="Home">🌙</div>
         </div>
 
     </div>
 
     <script>
-        const initialTasks = [
-            { id: 1, title: "Review FAMLI+ & Medical Docs", desc: "Check the pending messenger cat (notification) and review leave documentation requirements.", urgency: "High", completed: false },
-            { id: 2, title: "Submit Klaus's Health Appraisal", desc: "Send the completed health form from yesterday's appt to Britt to secure the academy spot.", urgency: "High", completed: false },
-            { id: 3, title: "Delegate NY Flights to Tuxedo Mask", desc: "Toss a rose and remind Kris to book the return flights for August 20th.", urgency: "Medium", completed: false },
-            { id: 4, title: "Moon Healing Escalation 🌙", desc: "Keep your clavicle immobilized, rest, and prepare for your post-op appt on Friday.", urgency: "High", completed: false }
-        ];
-
-        let state = { tasks: [...initialTasks], filter: 'All' };
-
-        const taskListEl = document.getElementById('task-list');
-        const progressBarEl = document.getElementById('progress-bar');
-        const progressTextEl = document.getElementById('progress-text');
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const turntable = document.getElementById('turntable');
-
-        // Record Player
-        function toggleSpin() {
-            turntable.classList.toggle('playing');
-        }
-
-        // Progress Bar
-        function updateProgress() {
-            const total = state.tasks.length;
-            if (total === 0) return;
-            const completed = state.tasks.filter(t => t.completed).length;
-            const pct = Math.round((completed / total) * 100);
-            
-            progressBarEl.style.width = `${pct}%`;
-            progressTextEl.innerText = `${pct}%`;
-        }
-
-        function toggleTask(id) {
-            state.tasks = state.tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
-            renderTasks();
-            updateProgress();
-        }
-
-        function getBadgeClass(urgency) {
-            if (urgency === 'High') return 'badge-high';
-            if (urgency === 'Medium') return 'badge-medium';
-            return 'badge-low';
-        }
-
-        // Render Tasks
-        function renderTasks() {
-            taskListEl.innerHTML = '';
-            const filteredTasks = state.tasks.filter(t => state.filter === 'All' ? true : t.urgency === state.filter);
-
-            if (filteredTasks.length === 0) {
-                taskListEl.innerHTML = `
-                    <div class="text-center py-10 text-pink-600 font-bold opacity-80">
-                        <div class="text-5xl mb-4 animate-pulse">✨</div>
-                        No tasks in this category! Rest up!
-                    </div>
-                `;
-                return;
+        // --- 1. FAIRY DUST PARTICLE SYSTEM ---
+        document.addEventListener('mousemove', function(e) {
+            if(Math.random() > 0.8) { // Don't spawn on every single pixel to save performance
+                createDust(e.pageX, e.pageY);
             }
-
-            filteredTasks.forEach(task => {
-                const item = document.createElement('div');
-                item.className = `task-item p-4 rounded-2xl flex items-start gap-4 cursor-pointer ${task.completed ? 'completed' : ''}`;
-                item.onclick = (e) => {
-                    if (e.target !== item.querySelector('input')) toggleTask(task.id);
-                };
-
-                item.innerHTML = `
-                    <input type="checkbox" class="star-checkbox mt-1" ${task.completed ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask(${task.id})">
-                    <div class="flex-1 min-w-0 pt-0.5">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1">
-                            <h3 class="task-title font-extrabold text-blue-900 leading-tight text-lg">${task.title}</h3>
-                            <span class="${getBadgeClass(task.urgency)} text-[10px] uppercase tracking-wider font-extrabold px-3 py-1 rounded-full flex-shrink-0 flex items-center shadow-sm w-fit">
-                                ${task.urgency}
-                            </span>
-                        </div>
-                        <p class="text-sm text-gray-700 leading-snug font-medium">${task.desc}</p>
-                    </div>
-                `;
-                taskListEl.appendChild(item);
-            });
-        }
-
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                state.filter = e.target.dataset.filter;
-                renderTasks();
-            });
         });
 
-        // Tamagotchi Game Logic
-        let lunaStats = { hunger: 100, happiness: 100, energy: 100 };
+        function createDust(x, y) {
+            const dust = document.createElement('div');
+            dust.className = 'fairy-dust';
+            dust.style.left = (x - 4) + 'px';
+            dust.style.top = (y - 4) + 'px';
+            
+            // Randomize size and color slightly
+            const size = Math.random() * 6 + 4;
+            dust.style.width = size + 'px';
+            dust.style.height = size + 'px';
+            
+            document.body.appendChild(dust);
+            
+            setTimeout(() => {
+                dust.remove();
+            }, 1500);
+        }
+
+        // --- 2. TONE.JS AUDIO SETUP ---
+        let synth;
+        let audioInitialized = false;
+
+        async function initAudio() {
+            if(audioInitialized) return;
+            await Tone.start();
+            // Create a magical sounding synth
+            synth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "sine" },
+                envelope: { attack: 0.05, decay: 0.1, sustain: 0.3, release: 1 }
+            }).toDestination();
+            synth.volume.value = -10;
+            audioInitialized = true;
+        }
+
+        // Bind init to first click anywhere
+        document.body.addEventListener('click', initAudio, { once: true });
+
+        // --- 3. 3D RECORD PLAYER LOGIC ---
+        const recordElement = document.getElementById('active-record');
+        const spotifyIframe = document.getElementById('spotify-iframe');
+
+        function changeRecord(playlistId) {
+            if(audioInitialized) synth.triggerAttackRelease(["C5", "E5", "G5"], "8n");
+            
+            // Stop spinning briefly
+            recordElement.classList.remove('spin');
+            
+            // Swap the iframe URL
+            setTimeout(() => {
+                spotifyIframe.src = `https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`;
+                recordElement.classList.add('spin');
+            }, 300);
+        }
+
+        function playMagicalSound(type) {
+            if(!audioInitialized) return;
+            if(type === 'play') {
+                synth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "4n");
+                recordElement.classList.toggle('spin');
+            } else if (type === 'next') {
+                synth.triggerAttackRelease(["G5", "C6"], "8n");
+            } else {
+                synth.triggerAttackRelease(["C6", "G5"], "8n");
+            }
+        }
+
+        // Initially spin
+        setTimeout(() => recordElement.classList.add('spin'), 1000);
+
+        // --- 4. LUNA-GOTCHI LOGIC ---
+        let lunaStats = { hunger: 100, happiness: 100, energy: 100, isSleeping: false };
         const mouthEl = document.getElementById('mouth');
         const spriteEl = document.getElementById('luna-sprite');
         const statusEl = document.getElementById('luna-status');
-        const hpEl = document.getElementById('luna-hp');
-        const enEl = document.getElementById('luna-en');
+        const zzzEl = document.getElementById('luna-zzzs');
+        
+        function playTamaBeep(high = false) {
+            if(!audioInitialized) return;
+            const osc = new Tone.Oscillator(high ? "C6" : "C5", "square").toDestination();
+            osc.volume.value = -20;
+            osc.start().stop("+0.1");
+        }
 
         function updateLunaUI() {
-            // Heart & Bolt displays
-            hpEl.innerText = lunaStats.happiness > 60 ? '♡♡♡' : (lunaStats.happiness > 30 ? '♡♡' : '♡');
-            enEl.innerText = lunaStats.energy > 50 ? '⚡⚡' : '⚡';
+            document.getElementById('luna-hp').innerText = lunaStats.happiness > 60 ? '♥♥♥' : (lunaStats.happiness > 30 ? '♥♥' : '♥');
+            document.getElementById('luna-en').innerText = lunaStats.energy > 50 ? '⚡⚡' : '⚡';
 
-            spriteEl.classList.remove('animate-bounce', 'animate-pulse');
+            spriteEl.style.animation = 'none';
+            zzzEl.classList.add('hidden');
+
+            if(lunaStats.isSleeping) {
+                statusEl.innerText = "Zzz...";
+                mouthEl.setAttribute('d', 'M48 76 L52 76'); // Neutral
+                spriteEl.style.animation = 'sleepPulse 2s infinite';
+                zzzEl.classList.remove('hidden');
+                return;
+            }
 
             if (lunaStats.hunger < 30) {
                 statusEl.innerText = "HUNGRY!";
-                mouthEl.setAttribute('d', 'M45 76 Q50 72 55 76'); // sad
+                mouthEl.setAttribute('d', 'M45 76 Q50 72 55 76'); // Sad
             } else if (lunaStats.happiness < 30) {
                 statusEl.innerText = "LONELY!";
-                mouthEl.setAttribute('d', 'M45 76 Q50 72 55 76'); // sad
+                mouthEl.setAttribute('d', 'M45 76 Q50 72 55 76'); // Sad
             } else if (lunaStats.energy < 30) {
                 statusEl.innerText = "SLEEPY...";
-                mouthEl.setAttribute('d', 'M48 76 L52 76'); // neutral
+                mouthEl.setAttribute('d', 'M48 76 L52 76'); // Neutral
             } else {
                 statusEl.innerText = "HAPPY!";
-                mouthEl.setAttribute('d', 'M45 74 Q50 78 55 74'); // smile
-                spriteEl.classList.add('animate-bounce');
+                mouthEl.setAttribute('d', 'M45 76 Q50 82 55 76'); // Smile
+                spriteEl.style.animation = 'bounceLuna 1.5s infinite';
             }
         }
 
         function feedLuna() {
+            if(lunaStats.isSleeping) return;
+            playTamaBeep();
             lunaStats.hunger = Math.min(100, lunaStats.hunger + 40);
-            lunaStats.happiness = Math.min(100, lunaStats.happiness + 10);
             statusEl.innerText = "YUM!";
             spriteEl.style.transform = "scale(1.1)";
             setTimeout(() => { spriteEl.style.transform = "scale(1)"; updateLunaUI(); }, 500);
         }
 
         function playLuna() {
+            if(lunaStats.isSleeping) return;
+            playTamaBeep(true);
             lunaStats.happiness = Math.min(100, lunaStats.happiness + 40);
             lunaStats.energy = Math.max(0, lunaStats.energy - 15);
             statusEl.innerText = "YAY!";
@@ -645,20 +800,84 @@
         }
 
         function sleepLuna() {
-            lunaStats.energy = 100;
-            lunaStats.hunger = Math.max(0, lunaStats.hunger - 10);
-            statusEl.innerText = "ZZZZ...";
-            spriteEl.classList.add('animate-pulse');
-            setTimeout(updateLunaUI, 1500);
+            playTamaBeep();
+            lunaStats.isSleeping = !lunaStats.isSleeping;
+            if(!lunaStats.isSleeping) {
+                lunaStats.energy = 100; // Woke up refreshed
+            }
+            updateLunaUI();
         }
 
-        // Tamagotchi degradation loop
         setInterval(() => {
-            lunaStats.hunger = Math.max(0, lunaStats.hunger - 5);
-            lunaStats.happiness = Math.max(0, lunaStats.happiness - 3);
-            lunaStats.energy = Math.max(0, lunaStats.energy - 2);
+            if(!lunaStats.isSleeping) {
+                lunaStats.hunger = Math.max(0, lunaStats.hunger - 2);
+                lunaStats.happiness = Math.max(0, lunaStats.happiness - 2);
+                lunaStats.energy = Math.max(0, lunaStats.energy - 1);
+            } else {
+                lunaStats.energy = Math.min(100, lunaStats.energy + 5);
+            }
             updateLunaUI();
-        }, 12000); // Degrades every 12 seconds for testing/playability
+        }, 5000); // Fast degradation for interactive testing
+
+        // --- 5. PLANNER LOGIC ---
+        const initialTasks = [
+            { id: 1, title: "Review FAMLI+ & Medical Docs", desc: "Check the pending messenger cat (notification) and review leave documentation requirements.", urgency: "High", completed: false },
+            { id: 2, title: "Submit Klaus's Health Appraisal", desc: "Send the completed health form from yesterday's appt to Britt to secure the academy spot.", urgency: "High", completed: false },
+            { id: 3, title: "Delegate NY Flights to Tuxedo Mask", desc: "Toss a rose and remind Kris to book the return flights for August 20th.", urgency: "Medium", completed: false },
+            { id: 4, title: "Moon Healing Escalation 🌙", desc: "Keep your clavicle immobilized, rest, and prepare for your post-op appt on Friday.", urgency: "High", completed: false }
+        ];
+
+        let pdaState = { tasks: [...initialTasks], filter: 'All' };
+        const taskListEl = document.getElementById('task-list');
+
+        function updateProgress() {
+            const total = pdaState.tasks.length;
+            if (total === 0) return;
+            const completed = pdaState.tasks.filter(t => t.completed).length;
+            const pct = Math.round((completed / total) * 100);
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('progress-text').innerText = `${pct}%`;
+        }
+
+        function toggleTask(id) {
+            if(audioInitialized) synth.triggerAttackRelease("C6", "16n");
+            pdaState.tasks = pdaState.tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            renderTasks();
+            updateProgress();
+        }
+
+        function setFilter(filter) {
+            if(audioInitialized) playTamaBeep();
+            pdaState.filter = filter;
+            renderTasks();
+        }
+
+        function renderTasks() {
+            taskListEl.innerHTML = '';
+            const filteredTasks = pdaState.tasks.filter(t => pdaState.filter === 'All' ? true : t.urgency === pdaState.filter);
+
+            filteredTasks.forEach(task => {
+                const item = document.createElement('div');
+                item.className = `task-item p-3 flex items-start gap-3 cursor-pointer ${task.completed ? 'completed' : ''}`;
+                item.onclick = (e) => {
+                    if (e.target !== item.querySelector('input')) toggleTask(task.id);
+                };
+
+                const badgeColor = task.urgency === 'High' ? 'bg-pink-500' : 'bg-purple-500';
+
+                item.innerHTML = `
+                    <input type="checkbox" class="star-checkbox mt-1" ${task.completed ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask(${task.id})">
+                    <div class="flex-1 min-w-0 pt-0.5">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <h3 class="task-title font-bold text-gray-800 text-sm">${task.title}</h3>
+                            <span class="${badgeColor} text-white text-[9px] uppercase font-bold px-2 py-0.5 rounded-md">${task.urgency}</span>
+                        </div>
+                        <p class="text-xs text-gray-500 leading-snug">${task.desc}</p>
+                    </div>
+                `;
+                taskListEl.appendChild(item);
+            });
+        }
 
         // Initialize App
         renderTasks();
