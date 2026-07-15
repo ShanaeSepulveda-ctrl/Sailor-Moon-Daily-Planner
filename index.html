@@ -3,23 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sailor Moon Daily Planner</title>
+    <title>Magical Daily Planner & Music</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --sm-pink: #ffb6c1;
+            --sm-hotpink: #ff69b4;
+            --sm-blue: #191970;
+            --sm-yellow: #ffd700;
+            --sm-purple: #9370db;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.8);
+        }
+
         body {
             margin: 0;
             font-family: 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #ffc3a0 0%, #ffafbd 25%, #d4a5ff 75%, #a1c4fd 100%);
+            /* Deep starry night fading into pastel twilight */
+            background: linear-gradient(180deg, #191970 0%, #483d8b 30%, #ffafbd 70%, #ffc3a0 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
             color: #4a4a4a;
+            overflow-x: hidden;
         }
 
-        /* Magical Starry Background Overlay */
         .stars-overlay {
             position: fixed;
             top: 0;
@@ -29,84 +40,294 @@
             pointer-events: none;
             background-image: 
                 radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 90px 40px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0,0,0,0));
+                radial-gradient(3px 3px at 80px 120px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 150px 70px, #ffd700, rgba(0,0,0,0)),
+                radial-gradient(4px 4px at 220px 220px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 350px 50px, #ffb6c1, rgba(0,0,0,0));
             background-repeat: repeat;
-            background-size: 200px 200px;
-            opacity: 0.4;
-            animation: twinkle 4s infinite alternate;
+            background-size: 400px 400px;
+            opacity: 0.6;
+            animation: twinkle 5s infinite alternate;
+            z-index: 0;
         }
 
         @keyframes twinkle {
-            0% { opacity: 0.2; }
-            100% { opacity: 0.6; }
+            0% { opacity: 0.3; transform: scale(0.98); }
+            100% { opacity: 0.8; transform: scale(1.02); }
         }
 
-        /* Glassmorphism Card */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.2);
-            border-radius: 24px;
+        .dashboard-container {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            align-items: flex-start;
+            justify-content: center;
+            flex-wrap: wrap; /* Wrap on mobile */
+            max-width: 1100px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .retro-player-card {
+            background: rgba(255, 182, 193, 0.85); /* Pastel pink */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 4px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(25, 25, 112, 0.3), inset 0 0 20px rgba(255,255,255,0.5);
+            border-radius: 32px;
+            width: 100%;
+            max-width: 380px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .player-title {
+            font-family: 'Fredoka One', cursive;
+            color: white;
+            text-shadow: 2px 2px 0px var(--sm-hotpink);
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .turntable {
+            width: 280px;
+            height: 280px;
+            background: #fff0f5;
+            border-radius: 20px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.1), 0 4px 0 rgba(255,255,255,0.8);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 24px;
+            border: 2px solid #ffd700;
+        }
+
+        /* The spinning vinyl record */
+        .vinyl {
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, #333 30%, #111 70%, #222 100%);
+            border-radius: 50%;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.8);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 4px solid #444;
+        }
+
+        /* Grooves on the vinyl */
+        .vinyl::before {
+            content: '';
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: inset 0 0 0 10px rgba(0,0,0,0.2), inset 0 0 0 20px rgba(255,255,255,0.05);
+        }
+
+        .vinyl-label {
+            width: 80px;
+            height: 80px;
+            background: var(--sm-pink);
+            border-radius: 50%;
+            border: 2px solid var(--sm-yellow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            box-shadow: inset 0 0 10px rgba(255,105,180,0.5);
+            z-index: 2;
+        }
+
+        .vinyl-label::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        @keyframes spinRecord {
+            100% { transform: rotate(360deg); }
+        }
+
+        .playing .vinyl {
+            animation: spinRecord 3s linear infinite;
+        }
+
+        .tonearm {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 120px;
+            transform-origin: top center;
+            transform: rotate(-25deg);
+            transition: transform 0.5s ease-in-out;
+            z-index: 5;
+        }
+
+        .playing .tonearm {
+            transform: rotate(15deg); /* Moves over the record */
+        }
+
+        .tonearm-base {
+            width: 30px;
+            height: 30px;
+            background: #ccc;
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .tonearm-rod {
+            width: 8px;
+            height: 100px;
+            background: linear-gradient(to right, #ddd, #fff, #aaa);
+            position: absolute;
+            top: 15px;
+            left: 11px;
+            border-radius: 4px;
+        }
+
+        .tonearm-head {
+            width: 16px;
+            height: 25px;
+            background: #444;
+            position: absolute;
+            bottom: -5px;
+            left: 7px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .spotify-wrapper {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .planner-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 3px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(25, 25, 112, 0.2);
+            border-radius: 32px;
             width: 100%;
             max-width: 600px;
             overflow: hidden;
             position: relative;
-            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            min-height: 650px;
+        }
+
+        /* Ribbon decorative element */
+        .ribbon-top {
+            position: absolute;
+            top: -10px;
+            right: 40px;
+            font-size: 3rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+            z-index: 20;
+            transform: rotate(15deg);
         }
 
         .title-font {
-            font-family: 'Pacifico', cursive;
-            background: -webkit-linear-gradient(45deg, #ff6b6b, #c06c84);
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(45deg, var(--sm-blue), var(--sm-hotpink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .moon-wand-container {
+            height: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid var(--sm-yellow);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .moon-wand-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
         }
 
         .task-item {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid transparent;
+            border: 2px solid rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.7);
         }
         
         .task-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255, 182, 193, 0.4);
-            border-color: rgba(255, 182, 193, 0.5);
-            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.2);
+            border-color: var(--sm-pink);
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .task-item.completed {
-            opacity: 0.6;
-            background: rgba(243, 244, 246, 0.6);
+            opacity: 0.65;
+            background: rgba(240, 240, 245, 0.5);
+            border-color: transparent;
         }
 
         .task-item.completed .task-title {
             text-decoration: line-through;
-            color: #9ca3af;
+            color: #888;
         }
 
-        /* Custom Star Checkbox */
         .star-checkbox {
             appearance: none;
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             background-color: #fff;
-            border: 2px solid #ffafbd;
+            border: 3px solid var(--sm-pink);
             border-radius: 50%;
             cursor: pointer;
             position: relative;
             outline: none;
             transition: all 0.3s ease;
             flex-shrink: 0;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .star-checkbox:checked {
-            background-color: #ffd700;
-            border-color: #ffd700;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+            background-color: var(--sm-yellow);
+            border-color: var(--sm-yellow);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: pop 0.4s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
         }
 
         .star-checkbox:checked::after {
@@ -115,61 +336,29 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 16px;
-            line-height: 1;
+            font-size: 18px;
         }
 
-        /* Urgency Pills */
-        .badge-high { background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); color: white; }
-        .badge-medium { background: linear-gradient(135deg, #b224ef 0%, #7579ff 100%); color: white; }
-        .badge-low { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); color: white; }
+        .badge-high { background: var(--sm-hotpink); color: white; box-shadow: 0 2px 5px rgba(255,105,180,0.4); }
+        .badge-medium { background: var(--sm-purple); color: white; box-shadow: 0 2px 5px rgba(147,112,219,0.4); }
+        .badge-low { background: #87ceeb; color: white; box-shadow: 0 2px 5px rgba(135,206,235,0.4); }
 
-        /* Filter Buttons */
         .filter-btn {
             transition: all 0.2s ease;
-            background: rgba(255,255,255,0.5);
-            color: #6b7280;
+            background: rgba(255,255,255,0.6);
+            color: var(--sm-blue);
+            border: 2px solid transparent;
         }
         .filter-btn:hover {
             background: rgba(255,255,255,0.9);
-            color: #ff6b6b;
+            border-color: var(--sm-pink);
         }
         .filter-btn.active {
-            background: #ffafbd;
+            background: var(--sm-pink);
             color: white;
-            font-weight: 700;
-            box-shadow: 0 4px 10px rgba(255, 175, 189, 0.4);
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            height: 12px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #ffafbd 0%, #ffc3a0 100%);
-            width: 0%;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            font-weight: 800;
+            border-color: var(--sm-hotpink);
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.4);
         }
     </style>
 </head>
@@ -177,70 +366,96 @@
 
     <div class="stars-overlay"></div>
 
-    <div class="glass-card flex flex-col h-[700px]">
-        <!-- Header -->
-        <div class="p-6 border-b border-white/40 bg-white/30 text-center relative">
-            <h1 class="title-font text-4xl mb-2 flex items-center justify-center gap-3">
-                <span>🌙</span> Magical Missions <span>✨</span>
-            </h1>
-            <p class="text-sm font-semibold text-pink-500 tracking-wide uppercase">Tuesday, July 14, 2026</p>
+    <div class="dashboard-container">
+        
+        <div class="retro-player-card">
+            <h2 class="player-title">🎶 Moon Melody</h2>
+            <p class="text-sm text-pink-700 font-bold mb-4 text-center">Click the record to spin!</p>
             
-            <div class="mt-5">
-                <div class="flex justify-between text-xs font-bold text-gray-500 mb-1 px-1">
-                    <span>Moon Power Level</span>
-                    <span id="progress-text">0%</span>
+            <div class="turntable" id="turntable" onclick="toggleSpin()">
+                <div class="tonearm">
+                    <div class="tonearm-base"></div>
+                    <div class="tonearm-rod"></div>
+                    <div class="tonearm-head"></div>
                 </div>
-                <div class="progress-container">
-                    <div class="progress-bar" id="progress-bar"></div>
+                <div class="vinyl">
+                    <div class="vinyl-label">🌙</div>
                 </div>
+            </div>
+
+            <!-- Spotify Lofi Playlist Embed -->
+            <div class="spotify-wrapper">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcK64WFXO9X6?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
         </div>
 
-        <!-- Filters -->
-        <div class="px-6 py-4 flex gap-2 overflow-x-auto border-b border-white/40 bg-white/10">
-            <button class="filter-btn active px-4 py-1.5 rounded-full text-sm font-bold shadow-sm" data-filter="All">All Magic</button>
-            <button class="filter-btn px-4 py-1.5 rounded-full text-sm font-bold shadow-sm" data-filter="High">💖 Critical</button>
-            <button class="filter-btn px-4 py-1.5 rounded-full text-sm font-bold shadow-sm" data-filter="Medium">🔮 Important</button>
+        <div class="planner-card">
+            <div class="ribbon-top">🎀</div>
+            
+            <!-- Header -->
+            <div class="p-6 border-b border-white/50 bg-white/40 text-center relative z-10">
+                <h1 class="title-font text-4xl mb-1 flex items-center justify-center gap-3">
+                    <span>🌙</span> Usagi's Missions <span>✨</span>
+                </h1>
+                <p class="text-sm font-bold text-blue-900 tracking-wide uppercase mt-2">Tuesday, July 14, 2026</p>
+                
+                <div class="mt-6 px-2">
+                    <div class="flex justify-between text-xs font-black text-pink-500 mb-2 uppercase tracking-widest">
+                        <span>Moon Healing Power</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="moon-wand-container">
+                        <div class="moon-wand-bar" id="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 flex gap-3 overflow-x-auto border-b border-white/50 bg-white/20">
+                <button class="filter-btn active px-4 py-2 rounded-full text-sm font-bold shadow-sm" data-filter="All">🌟 All Magic</button>
+                <button class="filter-btn px-4 py-2 rounded-full text-sm font-bold shadow-sm" data-filter="High">💖 Critical</button>
+                <button class="filter-btn px-4 py-2 rounded-full text-sm font-bold shadow-sm" data-filter="Medium">🔮 Important</button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-6 space-y-4" id="task-list">
+                <!-- Tasks injected via JS -->
+            </div>
+            
+            <!-- Footer -->
+            <div class="p-4 bg-white/50 text-center border-t border-white/50 text-sm font-bold text-indigo-900">
+                "In the name of the Moon, you will conquer today!" 🐈‍⬛🌙
+            </div>
         </div>
 
-        <!-- Task List -->
-        <div class="flex-1 overflow-y-auto p-6 space-y-4" id="task-list">
-            <!-- Tasks injected via JS -->
-        </div>
-        
-        <!-- Footer -->
-        <div class="p-4 bg-white/40 text-center border-t border-white/40 text-xs font-bold text-purple-400">
-            "In the name of the Moon, you will conquer today!" 🎀
-        </div>
     </div>
 
     <script>
+        // Pre-filled with today's specific context!
         const initialTasks = [
             { 
                 id: 1, 
-                title: "Review FAMLI+ & Leave Docs", 
-                desc: "Check the pending task notification and review leave documentation requirements.", 
+                title: "Review FAMLI+ & Medical Docs", 
+                desc: "Check the pending messenger cat (notification) and review leave documentation requirements.", 
                 urgency: "High", 
                 completed: false 
             },
             { 
                 id: 2, 
                 title: "Submit Klaus's Health Appraisal", 
-                desc: "Send the completed health form from yesterday's appointment to Britt.", 
+                desc: "Send the completed health form from yesterday's appt to Britt to secure the academy spot.", 
                 urgency: "High", 
                 completed: false 
             },
             { 
                 id: 3, 
-                title: "Delegate NY Flights to Tuxedo Mask (Kris)", 
-                desc: "Toss a rose and remind him to book the return flights for August 20th.", 
+                title: "Delegate NY Flights to Tuxedo Mask", 
+                desc: "Toss a rose and remind Kris to book the return flights for August 20th.", 
                 urgency: "Medium", 
                 completed: false 
             },
             { 
                 id: 4, 
                 title: "Moon Healing Escalation 🌙", 
-                desc: "Keep your arm immobilized, rest, and prepare for your post-op appt on Friday.", 
+                desc: "Keep your clavicle immobilized, rest, and prepare for your post-op appt on Friday.", 
                 urgency: "High", 
                 completed: false 
             }
@@ -255,6 +470,11 @@
         const progressBarEl = document.getElementById('progress-bar');
         const progressTextEl = document.getElementById('progress-text');
         const filterBtns = document.querySelectorAll('.filter-btn');
+        const turntable = document.getElementById('turntable');
+
+        function toggleSpin() {
+            turntable.classList.toggle('playing');
+        }
 
         function updateProgress() {
             const total = state.tasks.length;
@@ -263,7 +483,7 @@
             const pct = Math.round((completed / total) * 100);
             
             progressBarEl.style.width = `${pct}%`;
-            progressTextEl.innerText = `${pct}% Ready`;
+            progressTextEl.innerText = `${pct}%`;
         }
 
         function toggleTask(id) {
@@ -280,12 +500,6 @@
             return 'badge-low';
         }
 
-        function getUrgencyIcon(urgency) {
-            if (urgency === 'High') return '💖';
-            if (urgency === 'Medium') return '🔮';
-            return '💧';
-        }
-
         function renderTasks() {
             taskListEl.innerHTML = '';
             
@@ -296,9 +510,9 @@
 
             if (filteredTasks.length === 0) {
                 taskListEl.innerHTML = `
-                    <div class="text-center py-10 text-pink-400 font-bold opacity-70">
-                        <div class="text-4xl mb-3">✨</div>
-                        No tasks in this category!
+                    <div class="text-center py-10 text-pink-500 font-bold opacity-80">
+                        <div class="text-5xl mb-4">✨</div>
+                        No tasks in this category! Rest up!
                     </div>
                 `;
                 return;
@@ -306,9 +520,8 @@
 
             filteredTasks.forEach(task => {
                 const item = document.createElement('div');
-                item.className = `task-item bg-white/60 backdrop-blur p-4 rounded-2xl flex items-start gap-4 shadow-sm cursor-pointer ${task.completed ? 'completed' : ''}`;
+                item.className = `task-item p-4 rounded-2xl flex items-start gap-4 cursor-pointer ${task.completed ? 'completed' : ''}`;
                 item.onclick = (e) => {
-                    // Prevent double-firing if clicking exactly on the checkbox
                     if (e.target !== item.querySelector('input')) {
                         toggleTask(task.id);
                     }
@@ -318,12 +531,12 @@
                     <input type="checkbox" class="star-checkbox mt-1" ${task.completed ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask(${task.id})">
                     <div class="flex-1 min-w-0 pt-0.5">
                         <div class="flex items-center justify-between gap-2 mb-1">
-                            <h3 class="task-title font-bold text-gray-800 leading-tight">${task.title}</h3>
-                            <span class="${getBadgeClass(task.urgency)} text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full flex-shrink-0 flex items-center gap-1 shadow-sm">
+                            <h3 class="task-title font-extrabold text-blue-900 leading-tight text-lg">${task.title}</h3>
+                            <span class="${getBadgeClass(task.urgency)} text-[10px] uppercase tracking-wider font-extrabold px-3 py-1 rounded-full flex-shrink-0 flex items-center shadow-sm">
                                 ${task.urgency}
                             </span>
                         </div>
-                        <p class="text-sm text-gray-600 leading-snug">${task.desc}</p>
+                        <p class="text-sm text-gray-700 leading-snug font-medium">${task.desc}</p>
                     </div>
                 `;
                 
@@ -331,7 +544,6 @@
             });
         }
 
-        // Event Listeners for Filters
         filterBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 filterBtns.forEach(b => b.classList.remove('active'));
@@ -341,7 +553,7 @@
             });
         });
 
-        // Init
+        // Initialize the app
         renderTasks();
         updateProgress();
 
